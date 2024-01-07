@@ -1,0 +1,5 @@
+<RCC>
+    <qresource>
+        <file>qml/screens/MainWindow.qml</file>
+    </qresource>
+</RCC>
