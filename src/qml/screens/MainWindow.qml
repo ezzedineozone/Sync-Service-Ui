@@ -1,4 +1,5 @@
 import QtQuick
+import "../components"
 Window
 {
     width:1026
@@ -8,5 +9,12 @@ Window
         width:100
         height:100
         color: "white"
+        ButtonMed{
+            innerText:"Sync"
+        }
+        x:parent.x+3
     }
+
+
 }
+
