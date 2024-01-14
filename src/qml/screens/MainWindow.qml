@@ -17,22 +17,13 @@ Window
        rows: mainGridRows
        columns: mainGridColumns
        MenuBar{
+           id: menuBar
            width:mainWindowWidth
            Layout.columnSpan: mainGridColumns
-           ButtonMed{
-               innerText:"File"
-               border.width:0
-               radius:0
-           }
-           ButtonMed{
-               innerText:"Action"
-               border.width:0
-               radius:0
-           }
-           ButtonMed{
-               innerText:"View"
-               border.width:0
-               radius:0
+           Component.onCompleted: {
+               menuBar.addItem("File")
+               menuBar.addItem("Action")
+               menuBar.addItem("View")
            }
        }
     }
