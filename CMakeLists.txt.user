@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 12.0.0, 2024-01-07T17:29:36. -->
+<!-- Written by QtCreator 12.0.0, 2024-01-13T22:53:35. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -176,9 +176,9 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">ProjectSync</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.ProjectSync</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">ProjectSync</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">app</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.app</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">app</value>
     <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>

@@ -12,7 +12,7 @@ Rectangle
         text:"placeholder"
         color: "black"
         anchors.centerIn: parent
-        font.pixelSize: 16
+        font.pixelSize: 13
         font.family:"Segoe UI"
         font.weight: 400
     }
