@@ -1,9 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/screens/MainWindow.qml</file>
-        <file>qml/components/ButtonMed.qml</file>
-        <file>qml/components/ButtonLarge.qml</file>
-        <file>qml/components/ButtonSmall.qml</file>
         <file>qml/components/MenuBar.qml</file>
+        <file>images/icons/plus.png</file>
+        <file>qml/components/CustomButton.qml</file>
     </qresource>
 </RCC>

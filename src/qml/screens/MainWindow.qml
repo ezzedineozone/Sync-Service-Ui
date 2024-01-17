@@ -16,15 +16,25 @@ Window
     GridLayout{
        rows: mainGridRows
        columns: mainGridColumns
+       rowSpacing:0
        MenuBar{
            id: menuBar
            width:mainWindowWidth
            Layout.columnSpan: mainGridColumns
+           Layout.column:0
+           Layout.row:0
            Component.onCompleted: {
                menuBar.addItem("File")
                menuBar.addItem("Action")
                menuBar.addItem("View")
            }
+       }
+       CustomButton{
+           Layout.row:1
+           Layout.column:0
+           radius:0
+           innerText:"test"
+           textFontWeight: defaultFontWeight
        }
     }
 }
