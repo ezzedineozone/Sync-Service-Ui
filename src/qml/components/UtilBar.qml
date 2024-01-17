@@ -3,8 +3,8 @@ import QtQuick.Layouts
 
 // requires ButtonSmall.qml
 Rectangle{
-    color: "#F0F0F0"
-    height: menuRow.implicitHeight
+    color: "#F5F5F5"
+    height: menuRow.implicitHeight + 5
     Layout.preferredHeight: height
     ListModel{
         id: menuItems
@@ -13,22 +13,19 @@ Rectangle{
         id: menuRow
         rows:1
         columns: menuItems.count
+        columnSpacing:2
         Repeater{
             model: menuItems
-            delegate:CustomButton{
-                buttonSize: "small"
-                Layout.fillWidth: false
-                mainColor: "#f5f2f2"
-                innerText: model.text
-                radius: 0
+            delegate:ImageButton{
                 border.width: 0
-                Layout.row: 0
+                imageUrl: model.imageUrl
                 Layout.column: index
+                Layout.row:0
             }
         }
     }
-    function addItem(nameItem: string)
+    function addItem(imageUrl: string)
     {
-        menuItems.append({text:nameItem})
+        menuItems.append({imageUrl:imageUrl})
     }
 }

@@ -4,5 +4,7 @@
         <file>qml/components/MenuBar.qml</file>
         <file>images/icons/plus.png</file>
         <file>qml/components/CustomButton.qml</file>
+        <file>qml/components/ImageButton.qml</file>
+        <file>qml/components/UtilBar.qml</file>
     </qresource>
 </RCC>

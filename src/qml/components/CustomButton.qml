@@ -13,7 +13,7 @@ Rectangle{
     color: mainColor
 
     border.width: 0.5
-    border.color: "#b5b5b5"
+    border.color: "#F0F0F0"
     radius: 3
 
     width: customText.implicitWidth + 12 + extraWidthPadding
@@ -25,7 +25,7 @@ Rectangle{
         anchors.centerIn: parent
         id: customText
         text: innerText
-        color: black
+        color: "black"
     }
 
     MouseArea{

@@ -29,12 +29,17 @@ Window
                menuBar.addItem("View")
            }
        }
-       CustomButton{
-           Layout.row:1
-           Layout.column:0
-           radius:0
-           innerText:"test"
-           textFontWeight: defaultFontWeight
+       UtilBar{
+           id: utilBar
+           width:mainWindowWidth
+           Layout.columnSpan: mainGridColumns
+           Layout.column: 0
+           Layout.row: 1
+           Component.onCompleted: {
+               utilBar.addItem("qrc:images/icons/plus.png")
+               utilBar.addItem("qrc:images/icons/plus.png")
+               utilBar.addItem("qrc:images/icons/plus.png")
+           }
        }
     }
 }
