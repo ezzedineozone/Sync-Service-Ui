@@ -10,8 +10,10 @@ Window
     property int mainWindowWidth: 1000
     property int mainWindowHeight: 1400
 
-    width: mainWindowWidth
-    height: mainWindowHeight
+    maximumWidth: mainWindowWidth
+    maximumHeight: mainWindowHeight
+    minimumWidth: mainWindowWidth
+    minimumHeight: mainWindowHeight
     visible: true
     GridLayout{
        rows: mainGridRows
@@ -36,9 +38,9 @@ Window
            Layout.column: 0
            Layout.row: 1
            Component.onCompleted: {
-               utilBar.addItem("qrc:images/icons/plus.png")
-               utilBar.addItem("qrc:images/icons/plus.png")
-               utilBar.addItem("qrc:images/icons/plus.png")
+               utilBar.addItem("qrc:images/icons/plus.png", "Add")
+               utilBar.addItem("qrc:images/icons/sync.png", "Sync Now")
+               utilBar.addItem("qrc:images/icons/plus.png", "adddddddddaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
            }
        }
     }
