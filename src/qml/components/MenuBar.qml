@@ -5,7 +5,8 @@ import QtQuick.Layouts
 Rectangle{
     color: "#F0F0F0"
     height: menuRow.implicitHeight
-    Layout.preferredHeight: height
+    Layout.preferredHeight: menuRow.height
+    Layout.preferredWidth: menuRow.width
     ListModel{
         id: menuItems
     }

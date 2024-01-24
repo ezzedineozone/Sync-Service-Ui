@@ -7,5 +7,9 @@
         <file>qml/components/UtilBar.qml</file>
         <file>images/icons/plus.png</file>
         <file>images/icons/sync.png</file>
+        <file>images/icons/delete.png</file>
+        <file>images/icons/edit.png</file>
+        <file>images/icons/pause.png</file>
+        <file>qml/components/ProgressBar.qml</file>
     </qresource>
 </RCC>
