@@ -1,13 +1,13 @@
 import QtQuick
 import QtQuick.Layouts
 Rectangle{
-    property int _defaultLeftRightPadding:0
-    property int _defaultTopBottomPadding:0
 
+    property int padding: 5
+    property int leftPadding:0
+    property int rightPadding:15
+    property int bottomPadding:0
+    property int topPadding:0
     property string imageUrl:""
-    property int extraHeightPadding: 10
-    property int extraWidthPadding: 10
-    property int leftPadding:5
     property string mainColor:"#F5F5F5"
     property string clickColor: "#d9d7d7"
     property string hoverColor: "#e8e6e6"
@@ -20,15 +20,21 @@ Rectangle{
     border.width:0
     radius: 6
 
-    width: innerImage.width + customText.implicitWidth + _defaultLeftRightPadding + extraWidthPadding + leftPadding + 10
-    height: innerImage.height + _defaultTopBottomPadding + extraHeightPadding
+    width: contents.implicitWidth + 2 * padding + leftPadding + rightPadding
+    height: contents.implicitHeight + 2 *  padding + topPadding + bottomPadding
 
     Layout.preferredWidth: width
     Layout.preferredHeight: height
     RowLayout{
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenterOffset:- (parent.width/2) + (innerImage.width + customText.implicitWidth + 10)/2  + leftPadding
+        id: contents
+        anchors.left: parent.left
+        anchors.right:parent.right
+        anchors.top:parent.top
+        anchors.bottom:parent.bottom
+        anchors.leftMargin: padding + leftPadding
+        anchors.rightMargin: padding + rightPadding
+        anchors.topMargin: padding + topPadding
+        anchors.bottomMargin: padding + bottomPadding
         spacing:10
         Image{
             id: innerImage

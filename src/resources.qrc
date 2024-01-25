@@ -11,5 +11,6 @@
         <file>images/icons/edit.png</file>
         <file>images/icons/pause.png</file>
         <file>qml/components/ProgressBar.qml</file>
+        <file>qml/components/StatusBar.qml</file>
     </qresource>
 </RCC>

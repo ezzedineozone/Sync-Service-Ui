@@ -6,9 +6,9 @@ Window
     property string defaultFont: "Segoe UI"
     property int defaultFontWeight: 360
     property int mainGridColumns: 3
-    property int mainGridRows: 3
-    property int mainWindowWidth: 1000
-    property int mainWindowHeight: 1400
+    property int mainGridRows: 5
+    property int mainWindowWidth: 800
+    property int mainWindowHeight: 650
 
     maximumWidth: mainWindowWidth
     maximumHeight: mainWindowHeight
@@ -33,6 +33,9 @@ Window
            }
        }
        RowLayout{
+           Layout.row:1
+           Layout.column: 0
+           Layout.columnSpan: mainGridColumns
            id: utilBar
            spacing:0
            UtilBar{
@@ -63,22 +66,18 @@ Window
            }
        }
        Rectangle{
-           width: mainWindowWidth
+           Layout.row:2
            Layout.columnSpan: mainGridColumns
-           height: 10
-           Layout.column: 0
-           Layout.row: 2
-           color:"white"
+           height: mainWindowHeight - menuBar.implicitHeight - utilBar.implicitHeight - 105
+           width: mainWindowWidth
        }
-
-       ProgressBar{
-           id: mainProgressBar
-           Layout.column: 0
-           Layout.row:3
-           Component.onCompleted: {
-               mainProgressBar.modifyCompletion(0.5)
-           }
-       }
+        StatusBar{
+            width:mainWindowWidth
+            Layout.preferredWidth: width
+            Layout.columnSpan: mainGridColumns
+            Layout.row: 3
+            Layout.column: 0
+        }
     }
 }
 

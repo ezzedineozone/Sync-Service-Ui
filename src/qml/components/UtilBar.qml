@@ -36,9 +36,6 @@ Rectangle{
                 Layout.column: index + 1
                 Layout.row:0
                 Layout.topMargin: 5
-                extraHeightPadding:5
-                extraWidthPadding:25
-                leftPadding:5
             }
         }
     }

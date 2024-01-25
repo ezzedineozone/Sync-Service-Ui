@@ -11,9 +11,11 @@ Rectangle{
     Layout.preferredHeight: height
     GridLayout{
         Rectangle{
+            Layout.topMargin: 1
+            Layout.leftMargin: 1
             id: progress
             width: 0
-            height: parent.height - border.width * 2
+            height: parent.parent.height - parent.parent.border.width * 2
             color:"#47fc7d"
         }
         Layout.margins: 2
@@ -23,6 +25,6 @@ Rectangle{
 
     function modifyCompletion(value: double)
     {
-        progress.width = value * progress.parent.width - progress.parent.parent.border.width;
+        progress.width = value * progress.parent.parent.width - progress.parent.parent.border.width;
     }
 }
