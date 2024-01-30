@@ -1,8 +1,16 @@
 import QtQuick
 import QtQuick.Layouts
 import "../components"
+
 Window
 {
+    QtObject{
+        id: appMetadata
+        readonly property string appVersion: "0.1.0"
+    }
+
+
+
     property string defaultFont: "Segoe UI"
     property int defaultFontWeight: 360
     property int mainGridColumns: 3
@@ -72,11 +80,20 @@ Window
            width: mainWindowWidth
        }
         StatusBar{
+            id: mainStatusBar
             width:mainWindowWidth
+            displayVersion:true
             Layout.preferredWidth: width
             Layout.columnSpan: mainGridColumns
             Layout.row: 3
             Layout.column: 0
+        }
+        Text{
+            text:"test"
+            visible:false
+            Component.onCompleted: {
+                mainStatusBar.progressRate(0.2)
+            }
         }
     }
 }
