@@ -4,8 +4,7 @@ Rectangle{
     property int leftMargin: 20
     property int numOfElements:2
     property bool displayVersion: false
-    height:30
-    Layout.preferredHeight: height
+    Layout.preferredHeight: 30
     color: "#ededed"
     RowLayout{
         id: contents

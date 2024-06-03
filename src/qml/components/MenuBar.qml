@@ -3,10 +3,8 @@ import QtQuick.Layouts
 
 // requires ButtonSmall.qml
 Rectangle{
+    Layout.preferredHeight: menuRow.implicitHeight
     color: "#F0F0F0"
-    height: menuRow.implicitHeight
-    Layout.preferredHeight: menuRow.height
-    Layout.preferredWidth: menuRow.width
     ListModel{
         id: menuItems
     }

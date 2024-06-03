@@ -3,7 +3,7 @@ import QtQuick.Layouts
 Rectangle{
 
     property int padding: 5
-    property int leftPadding:0
+    property int leftPadding:5
     property int rightPadding:15
     property int bottomPadding:0
     property int topPadding:0
@@ -18,24 +18,14 @@ Rectangle{
 
     border.color: "black"
     border.width:0
-    radius: 6
-
-    width: contents.implicitWidth + 2 * padding + leftPadding + rightPadding
-    height: contents.implicitHeight + 2 *  padding + topPadding + bottomPadding
-
-    Layout.preferredWidth: width
-    Layout.preferredHeight: height
+    radius: 0
+    Layout.preferredWidth: contents.implicitWidth + 2 * padding + leftPadding + rightPadding
+    Layout.preferredHeight: contents.implicitHeight + 2 *  padding + topPadding + bottomPadding
     RowLayout{
         id: contents
-        anchors.left: parent.left
-        anchors.right:parent.right
-        anchors.top:parent.top
-        anchors.bottom:parent.bottom
-        anchors.leftMargin: padding + leftPadding
-        anchors.rightMargin: padding + rightPadding
-        anchors.topMargin: padding + topPadding
-        anchors.bottomMargin: padding + bottomPadding
+        anchors.fill:parent
         spacing:10
+        anchors.leftMargin:leftPadding
         Image{
             id: innerImage
             width:40

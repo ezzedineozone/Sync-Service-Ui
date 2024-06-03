@@ -6,12 +6,8 @@ Rectangle{
     property int leftPadding : 0
     property int heightPadding: 5
     property int widthPadding: 5
-
+    Layout.preferredHeight: menuRow.implicitHeight
     color: "#F5F5F5"
-    width: menuRow.implicitWidth + widthPadding
-    height: menuRow.implicitHeight + heightPadding
-    Layout.preferredHeight: menuRow.implicitHeight + heightPadding
-    Layout.preferredWidth:  menuRow.implicitWidth + widthPadding
 
     ListModel{
         id: menuItems
@@ -21,11 +17,7 @@ Rectangle{
         id: menuRow
         rows:1
         columns: menuItems.count + 1
-        columnSpacing:2
-        Rectangle{
-            width:leftPadding
-            height:menuRow.implicitHeight
-        }
+        columnSpacing:0
         Repeater{
             id: repeater
             model: menuItems
@@ -35,7 +27,6 @@ Rectangle{
                 title: model.title
                 Layout.column: index + 1
                 Layout.row:0
-                Layout.topMargin: 5
             }
         }
     }

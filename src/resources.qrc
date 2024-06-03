@@ -12,5 +12,6 @@
         <file>images/icons/pause.png</file>
         <file>qml/components/ProgressBar.qml</file>
         <file>qml/components/StatusBar.qml</file>
+        <file>qml/components/SyncTable.qml</file>
     </qresource>
 </RCC>
