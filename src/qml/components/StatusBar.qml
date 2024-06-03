@@ -5,6 +5,7 @@ Rectangle{
     property int numOfElements:2
     property bool displayVersion: false
     Layout.preferredHeight: 30
+    Layout.preferredWidth: 300
     color: "#ededed"
     RowLayout{
         id: contents

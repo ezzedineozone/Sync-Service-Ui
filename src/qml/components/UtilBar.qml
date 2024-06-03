@@ -7,6 +7,7 @@ Rectangle{
     property int heightPadding: 5
     property int widthPadding: 5
     Layout.preferredHeight: menuRow.implicitHeight
+    Layout.preferredWidth: menuRow.implicitWidth
     color: "#F5F5F5"
 
     ListModel{

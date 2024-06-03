@@ -19,8 +19,10 @@ Window
     property int mainWindowHeight: 650
 
 
-    minimumWidth: mainWindowWidth
-    minimumHeight: mainWindowHeight
+    minimumWidth: utilBar.implicitWidth
+    minimumHeight: menuBar.height + utilBar.height + mainStatusBar.height
+    width: mainWindowWidth
+    height: mainWindowHeight
     visible: true
     GridLayout{
        anchors.fill: parent
@@ -53,7 +55,6 @@ Window
                spacing:3
                UtilBar{
                    id: utilBarModify
-                   Layout.preferredWidth: 0.4 * mainWindowWidth
                    Component.onCompleted: {
                        utilBarModify.addButton("qrc:images/icons/plus.png", "Add")
                        utilBarModify.addButton("qrc:images/icons/edit.png", "Edit")
@@ -82,9 +83,8 @@ Window
             }
         StatusBar{
             id: mainStatusBar
-            width:mainWindowWidth
             displayVersion:true
-            Layout.preferredWidth: parent.width
+            Layout.fillWidth: true
             Layout.columnSpan: mainGridColumns
             Layout.row: 3
             Layout.column: 0
