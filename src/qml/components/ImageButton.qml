@@ -12,8 +12,11 @@ Rectangle{
     property string clickColor: "#d9d7d7"
     property string hoverColor: "#e8e6e6"
     property string buttonSize: "medium"
+    property int imageWidth:40
+    property int imageHeight:40
+    property int inner_spacing: 10
     property string title: ""
-
+    property var behavior
     color: mainColor
 
     border.color: "black"
@@ -24,12 +27,12 @@ Rectangle{
     RowLayout{
         id: contents
         anchors.fill:parent
-        spacing:10
+        spacing: inner_spacing
         anchors.leftMargin:leftPadding
         Image{
             id: innerImage
-            width:40
-            height:40
+            width:imageWidth
+            height:imageHeight
             Layout.preferredWidth: width
             Layout.preferredHeight: height
             Layout.row:0
@@ -44,6 +47,7 @@ Rectangle{
     }
 
     MouseArea{
+        id: mouseArea
         anchors.fill:parent
         hoverEnabled:true
         onEntered:{
@@ -56,7 +60,9 @@ Rectangle{
             parent.color = clickColor
         }
         onReleased:{
-            parent.color = hoverColor
+            parent.color = hoverColor;
+            console.log(behavior);
+            behavior();
         }
     }
 

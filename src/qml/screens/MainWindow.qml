@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import "../components"
+import "../components/SyncTable"
 
 Window
 {
@@ -9,7 +10,12 @@ Window
         readonly property string appVersion: "0.1.0"
     }
 
-
+    function openAddSyncModulePopup(){
+        addSyncModule.visible = true
+    }
+    AddSyncModule{
+        id: addSyncModule
+    }
 
     property string defaultFont: "Segoe UI"
     property int defaultFontWeight: 360
@@ -56,9 +62,9 @@ Window
                UtilBar{
                    id: utilBarModify
                    Component.onCompleted: {
-                       utilBarModify.addButton("qrc:images/icons/plus.png", "Add")
-                       utilBarModify.addButton("qrc:images/icons/edit.png", "Edit")
-                       utilBarModify.addButton("qrc:images/icons/delete.png", "Delete")
+                       utilBarModify.addButton("qrc:images/icons/plus.png", "Add", openAddSyncModulePopup)
+                       utilBarModify.addButton("qrc:images/icons/edit.png", "Edit", openAddSyncModulePopup)
+                       utilBarModify.addButton("qrc:images/icons/delete.png", "Delete", openAddSyncModulePopup)
                    }
                }
 
@@ -66,21 +72,20 @@ Window
                    Layout.fillWidth: true
                    id: utilBarControl
                    Component.onCompleted: {
-                       utilBarControl.addButton("qrc:images/icons/sync.png", "Sync All")
-                       utilBarControl.addButton("qrc:images/icons/pause.png", "Pause All")
+                       utilBarControl.addButton("qrc:images/icons/sync.png", "Sync All", openAddSyncModulePopup)
+                       utilBarControl.addButton("qrc:images/icons/pause.png", "Pause All", openAddSyncModulePopup)
                    }
                }
            }
        }
-           //temporary spacer element for until we add the tableSync
-        Rectangle{
-               Layout.column:0
-               Layout.row:2
-               Layout.columnSpan: mainGridColumns
-               Layout.preferredWidth: parent.width
-               Layout.fillWidth: true
-               Layout.fillHeight: true
-            }
+        SyncTable{
+           id: syncTable
+           Layout.column:0
+           Layout.row:2
+           Layout.margins: 1
+           Layout.topMargin: 10
+           Component.onCompleted: syncTable.addSyncModule(1, "local", "oneway", "C://documents" , "C://desktop");
+        }
         StatusBar{
             id: mainStatusBar
             displayVersion:true

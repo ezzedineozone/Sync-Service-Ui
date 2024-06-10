@@ -10,8 +10,9 @@ Rectangle{
     Layout.preferredWidth: menuRow.implicitWidth
     color: "#F5F5F5"
 
+
     ListModel{
-        id: menuItems
+        id:menuItems
     }
 
     GridLayout{
@@ -28,16 +29,17 @@ Rectangle{
                 title: model.title
                 Layout.column: index + 1
                 Layout.row:0
+                behavior: model.func.behavior
             }
         }
     }
-    function addButton(imageUrl, text = "")
+    function addButton(imageUrl, text = "", func)
     {
         if(text === "")
             menuItems.append({imageUrl:imageUrl})
         else
         {
-            menuItems.append({imageUrl:imageUrl, title:text})
+            menuItems.append({imageUrl:imageUrl, title:text, func: {behavior:func}})
         }
     }
 }

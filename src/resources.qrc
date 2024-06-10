@@ -12,6 +12,9 @@
         <file>images/icons/pause.png</file>
         <file>qml/components/ProgressBar.qml</file>
         <file>qml/components/StatusBar.qml</file>
-        <file>qml/components/SyncTable.qml</file>
+        <file>qml/components/SyncTable/SyncTable.qml</file>
+        <file>qml/components/SyncTable/ResizableRectangle.qml</file>
+        <file>qml/screens/AddSyncModule.qml</file>
+        <file>images/icons/folder.png</file>
     </qresource>
 </RCC>
