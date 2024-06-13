@@ -61,7 +61,6 @@ Rectangle{
         }
         onReleased:{
             parent.color = hoverColor;
-            console.log(behavior);
             behavior();
         }
     }

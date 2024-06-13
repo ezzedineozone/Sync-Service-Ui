@@ -3,11 +3,13 @@ import QtQuick.Layouts
 Rectangle{
     Layout.fillWidth: true
     Layout.fillHeight: true
-    Repeater{
-        id: repeater
-        model: syncModules
-        delegate:Text{
-            text: model.syncId + " " + model.type + " " + model.direction + " " + model.source + " " + model.directory + "\n"
+    ColumnLayout{
+        Repeater{
+            id: repeater
+            model: syncModules
+            delegate:Text{
+                text: model.syncId + " " + model.type + " " + model.direction + " " + model.source + " " + model.directory + "\n"
+            }
         }
     }
 

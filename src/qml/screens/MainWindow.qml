@@ -11,10 +11,17 @@ Window
     }
 
     function openAddSyncModulePopup(){
-        addSyncModule.visible = true
+        addSyncModuleWindow.visible = true
     }
+    function addSyncModule(){
+        console.log("adding module.......")
+        syncTable.addSyncModule(2, addSyncModuleWindow.sync_type, addSyncModuleWindow.sync_direction, addSyncModuleWindow.source, addSyncModuleWindow.destination);
+    }
+
+
     AddSyncModule{
-        id: addSyncModule
+        id: addSyncModuleWindow
+        onDone: () => {addSyncModule()}
     }
 
     property string defaultFont: "Segoe UI"

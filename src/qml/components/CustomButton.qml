@@ -7,17 +7,18 @@ Rectangle{
     property string innerText: "placeholder"
     property int extraHeightPadding: 0
     property int extraWidthPadding: 0
+    property double border_width: 0
     property string mainColor:"#F3F3F3"
     property string buttonSize: "medium"
-
+    property var behavior
     color: mainColor
 
-    border.width: 0.5
-    border.color: "#F0F0F0"
+    border.width: border_width
+    border.color: "lightgray"
     radius: 3
 
     width: customText.implicitWidth + 12 + extraWidthPadding
-    height: customText.implicitHeight + 2 + extraWidthPadding
+    height: customText.implicitHeight + 2 + extraHeightPadding
 
     Layout.preferredWidth: width
     Layout.preferredHeight: height
@@ -37,6 +38,9 @@ Rectangle{
         onExited:{
             parent.color = mainColor
         }
+        onReleased: {
+            behavior()
+        }
     }
 
     Component.onCompleted:{loadAssets()}
@@ -45,11 +49,14 @@ Rectangle{
         customText.text = innerText;
         customText.font.family = textFont;
         customText.font.weight = textFontWeight;
-        if(buttonSize == "medium")
-            customText.font.pixelSize = 16
-        else if(buttonSize == "large")
-            customText.font.pixelSize = 18
-        else
+        if(buttonSize === "medium")
+        {
+            customText.font.pixelSize = 13
+            this.ext
+        }
+        else if(buttonSize === "large")
+            customText.font.pixelSize = 13
+        else if(buttonSize === "small")
             customText.font.pixelSize = 13
     }
 }
