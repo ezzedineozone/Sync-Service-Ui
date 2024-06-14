@@ -25,16 +25,18 @@ ApplicationWindow {
     }
     function onAcceptedFolderDialog()
     {
-        console.log(selectedDialog);
         console.log(folder_dialog.selectedFolder);
         if(selectedDialog === "source")
-            source_input.text = folder_dialog.selectedFolder
+            source_input.text = folder_dialog.selectedFolder.toString().replace("file:///", "")
         else if(selectedDialog === "destination")
-            destination_input.text = folder_dialog.selectedFolder
+            destination_input.text = folder_dialog.selectedFolder.toString().replace("file:///","")
         else
             console.log("no valid text box found for modal");
     }
+    function checkFormValidity()
+    {
 
+    }
     function onAddButtonClick(){
         sync_type = selected_type.currentValue;
         sync_direction = selected_direction.currentValue;
@@ -94,7 +96,7 @@ ApplicationWindow {
                 }
                 ComboBox{
                     model: sync_types
-                    font.pixelSize: 12
+                    font.pixelSize: 14
                     id: selected_type
                 }
             }
@@ -110,7 +112,7 @@ ApplicationWindow {
                 ComboBox{
                     Layout.leftMargin: 30
                     model: sync_directions
-                    font.pixelSize: 12
+                    font.pixelSize: 14
                     id: selected_direction
                 }
             }
@@ -131,6 +133,8 @@ ApplicationWindow {
                         id: source_input
                         Layout.fillWidth: true
                         font.pixelSize: 16
+                        placeholderText: "Source directory here"
+                        readOnly: true
                     }
                     ImageButton{
                         imageUrl: "qrc:images/icons/folder.png"
@@ -160,7 +164,9 @@ ApplicationWindow {
                     TextArea{
                         id: destination_input
                         Layout.fillWidth: true
+                        placeholderText: "Destination directory here"
                         font.pixelSize: 16
+                        readOnly: true
                     }
                     ImageButton{
                         imageUrl: "qrc:images/icons/folder.png"

@@ -3,10 +3,10 @@ import QtQuick.Layouts
 Rectangle{
     property int textFontSize: 16
     property string textFont: "Segoe UI"
-    property int textFontWeight: 375
+    property int textFontWeight: 350
     property string innerText: "placeholder"
-    property int extraHeightPadding: 0
-    property int extraWidthPadding: 0
+    property int extraHeightPadding: 3
+    property int extraWidthPadding: 5
     property double border_width: 0
     property string mainColor:"#F3F3F3"
     property string buttonSize: "medium"
@@ -15,7 +15,7 @@ Rectangle{
 
     border.width: border_width
     border.color: "lightgray"
-    radius: 3
+    radius: 1
 
     width: customText.implicitWidth + 12 + extraWidthPadding
     height: customText.implicitHeight + 2 + extraHeightPadding
@@ -52,7 +52,6 @@ Rectangle{
         if(buttonSize === "medium")
         {
             customText.font.pixelSize = 13
-            this.ext
         }
         else if(buttonSize === "large")
             customText.font.pixelSize = 13
