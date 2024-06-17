@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import "../components"
+import user.QObjects 1.0;
 
 ApplicationWindow {
     property string selectedDialog: ""
