@@ -10,6 +10,7 @@ set(SOURCES
     src/sync_service/sync_service.cpp
     src/resources.qrc
     src/QObjects/AddSyncModule.h
+    src/QObjects/MainWindow.h
 )
 qt_add_executable(app ${SOURCES})
 target_link_libraries(app PRIVATE Qt6::Gui Qt6::Quick)

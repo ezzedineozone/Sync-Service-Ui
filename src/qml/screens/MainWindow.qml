@@ -9,9 +9,10 @@ Window
         id: appMetadata
         readonly property string appVersion: "0.1.0"
     }
-
+    signal addButtonClicked;
     function openAddSyncModulePopup(){
-        addSyncModuleWindow.visible = true
+        console.log("main window button clicked");
+        addButtonClicked();
     }
 
 
@@ -26,7 +27,6 @@ Window
     property int mainGridRows: 5
     property int mainWindowWidth: 900
     property int mainWindowHeight: 650
-
 
     minimumWidth: utilBar.implicitWidth
     minimumHeight: menuBar.height + utilBar.height + mainStatusBar.height

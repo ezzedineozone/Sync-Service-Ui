@@ -4,13 +4,11 @@
 #define HELPER_H
 class helper{
 public:
-    static char* getQmlClasstype(QObject* obj)
+    static void getQmlClasstype(QObject* obj, char* result)
     {
         const QMetaObject* metaObj = obj->metaObject();
         const char* className = obj->metaObject()->className();
-        char* substring = new char[strlen(className) + 1];
-        strncpy(substring,className,strlen(className) - 3);
-        return substring;
+        strncpy(result,className,strlen(className) - 3);
     }
 };
 

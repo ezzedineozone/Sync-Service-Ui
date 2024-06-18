@@ -19,7 +19,8 @@ ApplicationWindow {
     height: 270
     visible: false
     modality: Qt.ApplicationModal
-
+    signal openSignal;
+    onOpenSignal: () => {visible = true}
     function openFolderSelectionModal(type){
        selectedDialog = type
        folder_dialog.open()

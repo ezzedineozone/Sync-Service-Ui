@@ -20,5 +20,6 @@
         <file>sync_service/sync_service.cpp</file>
         <file>QObjects/AddSyncModule.h</file>
         <file>helper.h</file>
+        <file>QObjects/MainWindow.h</file>
     </qresource>
 </RCC>

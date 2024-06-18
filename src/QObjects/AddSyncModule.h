@@ -1,3 +1,8 @@
+#ifndef Included_ADDSYNCMODULE_H
+
+#define Included_ADDSYNCMODULE_H
+
+
 #include <QObject>
 #include <cstring>
 #include <QtDebug>
@@ -17,7 +22,9 @@ private:
 public:
     AddSyncModule(QObject* obj){
         const QMetaObject* metaObj = obj->metaObject();
-        char* className = helper::getQmlClasstype(obj);
+        char* className = new char[strlen(metaObj->className()) - 3];
+        helper::getQmlClasstype(obj, className);
+        qDebug() << className;
         int result = strcmp(className,"AddSyncModule_QMLTYPE");
         if (result == 0)
         {
@@ -30,6 +37,7 @@ public:
             setDestination(QString(destination_prop.read(obj).toString()));
             setDirection(QString(direction_prop.read(obj).toString()));
             setType((type_prop.read(obj).toString()));
+            QObject::connect(this, SIGNAL(openSignal()),obj,SIGNAL(openSignal()));
         }
         else
             qDebug() << "wrong type passed";
@@ -58,4 +66,9 @@ public:
     QString getDirection(){
         return direction;
     }
+signals:
+    void openSignal();
 };
+
+#endif
+

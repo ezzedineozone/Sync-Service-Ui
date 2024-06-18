@@ -3,22 +3,29 @@
 #include <QQuickView>
 #include <QFile>
 #include <QGuiApplication>
-#include <qqmlapplicationengine.h>
+#include <QQmlapplicationengine.h>
 #include <QtDebug>
 #include <QQmlContext>
-#include "QObjects/AddSyncModule.h"
+#include "QObjects/MainWindow.h"
+
+AddSyncModule* addSyncModule;
+MainWindow* mainWindow;
 
 
-int main(int argc, char* argv[]){
-    QGuiApplication app(argc, argv);
-    QQmlApplicationEngine engine(QUrl("qrc:/qml/screens/MainWindow.qml"));
-    qmlRegisterType<AddSyncModule>("user.QObjects",1,0,"AddSyncModule");
+void instantiateObjects(QQmlApplicationEngine& engine){
     QObject* root_obj = engine.rootObjects().first();
     qDebug() << root_obj->children();
     QObject* addSyncModuleWindow = root_obj->findChild<QObject *>("addSyncModuleWindow");
     qDebug() << addSyncModuleWindow;
-    AddSyncModule* addSyncModule = new AddSyncModule(addSyncModuleWindow);
+    addSyncModule = new AddSyncModule(addSyncModuleWindow);
+    mainWindow = new MainWindow(root_obj, addSyncModule);
     qDebug() << addSyncModule;
+}
+int main(int argc, char* argv[]){
+    QGuiApplication app(argc, argv);
+    qmlRegisterType<AddSyncModule>("user.QObjects",1,0,"AddSyncModule");
+    QQmlApplicationEngine engine(QUrl("qrc:/qml/screens/MainWindow.qml"));
+    instantiateObjects(engine);
     return app.exec();
 }
 
