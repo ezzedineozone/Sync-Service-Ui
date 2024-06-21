@@ -7,11 +7,14 @@ import user.QObjects 1.0;
 
 ApplicationWindow {
     property string selectedDialog: ""
-    property string sync_type
-    property string sync_direction
-    property string source
-    property string destination
-    signal done
+
+    signal done;
+    signal cancel;
+    signal openSignal;
+    signal sourceFolderAccepted();
+    signal destinationFolderAccepted();
+    signal typeSelected;
+    signal directionSelected;
 
 
     id: window
@@ -19,35 +22,40 @@ ApplicationWindow {
     height: 270
     visible: false
     modality: Qt.ApplicationModal
-    signal openSignal;
     onOpenSignal: () => {visible = true}
+
+
+
+
     function openFolderSelectionModal(type){
        selectedDialog = type
-       folder_dialog.open()
+       if(type === "source")
+       {
+           source_folder_dialog.open();
+       }
+       else if (type === "destination")
+       {
+           destination_folder_dialog.open();
+       }
     }
-    function onAcceptedFolderDialog()
+    function onAcceptedComboBox(type)
     {
-        console.log(folder_dialog.selectedFolder);
-        if(selectedDialog === "source")
-            source_input.text = folder_dialog.selectedFolder.toString().replace("file:///", "")
-        else if(selectedDialog === "destination")
-            destination_input.text = folder_dialog.selectedFolder.toString().replace("file:///","")
+        if(type === "direction")
+            directionSelected();
+        else if (type === "type")
+            typeSelected();
         else
-            console.log("no valid text box found for modal");
-    }
-    function checkFormValidity()
-    {
-
+            console.log("invalid combo box signal");
     }
     function onAddButtonClick(){
-        sync_type = selected_type.currentValue;
-        sync_direction = selected_direction.currentValue;
-        source = source_input.text;
-        destination = source_input.text;
         done();
     }
     function onCancelButtonClick(){
-        visible = false
+        cancel();
+    }
+    Component.onCompleted: {
+        onAcceptedComboBox("type");
+        onAcceptedComboBox("direction");
     }
 
     ListModel{
@@ -73,9 +81,19 @@ ApplicationWindow {
     }
 
     FolderDialog{
-        id: folder_dialog
+        id: source_folder_dialog
+        objectName: "source_folder_dialog"
         modality: Qt.ApplicationModal
-        onAccepted: () => {onAcceptedFolderDialog()}
+        onAccepted: () => {sourceFolderAccepted()}
+        onRejected: () => {console.log("folder modal rejected")}
+        acceptLabel: "Select Folder"
+        rejectLabel: "Close"
+    }
+    FolderDialog{
+        id: destination_folder_dialog
+        objectName: "destination_folder_dialog"
+        modality: Qt.ApplicationModal
+        onAccepted: () => {destinationFolderAccepted()}
         onRejected: () => {console.log("folder modal rejected")}
         acceptLabel: "Select Folder"
         rejectLabel: "Close"
@@ -97,9 +115,11 @@ ApplicationWindow {
                     text: "Type: "
                 }
                 ComboBox{
+                    objectName: "type_selector"
                     model: sync_types
                     font.pixelSize: 14
                     id: selected_type
+                    onActivated: ()=>{onAcceptedComboBox("type")}
                 }
             }
             ColumnLayout{
@@ -112,10 +132,12 @@ ApplicationWindow {
                     text: "Direction: "
                 }
                 ComboBox{
+                    objectName: "direction_selector"
                     Layout.leftMargin: 30
                     model: sync_directions
                     font.pixelSize: 14
                     id: selected_direction
+                    onActivated: ()=>{onAcceptedComboBox("direction")}
                 }
             }
 
@@ -133,6 +155,7 @@ ApplicationWindow {
                 RowLayout{
                     TextArea{
                         id: source_input
+                        objectName: "source_input"
                         Layout.fillWidth: true
                         font.pixelSize: 16
                         placeholderText: "Source directory here"
@@ -165,6 +188,7 @@ ApplicationWindow {
                 RowLayout{
                     TextArea{
                         id: destination_input
+                        objectName: "destination_input"
                         Layout.fillWidth: true
                         placeholderText: "Destination directory here"
                         font.pixelSize: 16

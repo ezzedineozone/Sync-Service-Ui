@@ -20,7 +20,7 @@ private:
 public:
     MainWindow(QObject* obj, AddSyncModule* module){
         const QMetaObject* metaObj = obj->metaObject();
-        char* className = new char[strlen(metaObj->className()) - 3];
+        char* className = new char[strlen(metaObj->className()) - 2];
         helper::getQmlClasstype(obj, className);
         addSyncModule = module;
         qDebug() << className;
