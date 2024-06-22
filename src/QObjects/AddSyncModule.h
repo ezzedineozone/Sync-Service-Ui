@@ -127,7 +127,7 @@ public slots:
         this->direction = selectedDirection;
     };
     void onDone(){
-        //code for saving the sync module in the database and clearing the current object
+
     };
 };
 
