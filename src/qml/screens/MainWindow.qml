@@ -83,6 +83,7 @@ Window
        }
         SyncTable{
            id: syncTable
+           objectName: "syncTable"
            Layout.column:0
            Layout.row:2
            Layout.margins: 1

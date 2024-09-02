@@ -24,8 +24,10 @@ private:
 
 
 public:
+        QObject* qObj;
     AddSyncModule(QObject* obj){
         const QMetaObject* metaObj = obj->metaObject();
+        this->qObj = obj;
         char* className = new char[strlen(metaObj->className()) - 2];
         helper::getQmlClasstype(obj, className);
         qDebug() << className;
@@ -127,7 +129,7 @@ public slots:
         this->direction = selectedDirection;
     };
     void onDone(){
-        //code for saving the sync module in the database and clearing the current object
+
     };
 };
 

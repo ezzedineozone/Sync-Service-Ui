@@ -14,12 +14,14 @@
 class MainWindow : public QObject
 {
     Q_OBJECT
-    AddSyncModule* addSyncModule;
 private:
 
 public:
+    QObject* qObj;
+    AddSyncModule* addSyncModule;
     MainWindow(QObject* obj, AddSyncModule* module){
         const QMetaObject* metaObj = obj->metaObject();
+        qObj = obj;
         char* className = new char[strlen(metaObj->className()) - 2];
         helper::getQmlClasstype(obj, className);
         addSyncModule = module;
@@ -32,7 +34,6 @@ public:
             qDebug() << "incorrect type passed";
         }
     }
-
 };
 
 
