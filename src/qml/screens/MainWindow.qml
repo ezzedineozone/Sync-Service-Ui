@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import "../components"
 import "../components/SyncTable"
+import QtQuick.Controls
 
 Window
 {
@@ -19,6 +20,43 @@ Window
     AddSyncModule{
         id: addSyncModuleWindow
         objectName: "addSyncModuleWindow"
+    }
+
+    Dialog {
+        id: errorDialog
+        title: "Error"
+        anchors.centerIn: parent
+        width: errorLayout.implicitWidth + 20
+        height: errorLayout.implicitHeight + 40
+        modal: true
+        visible: true
+        ColumnLayout{
+            id: errorLayout
+            anchors.centerIn: parent
+            Text{
+                font.pixelSize: 13
+                text: "An error has occured"
+                id: generalErrorText
+            }
+            RowLayout{
+                Button{
+                    Layout.preferredWidth: 60
+                    Layout.preferredHeight: 22
+                    Layout.alignment: Qt.AlignHCenter
+                    text: "Log"
+                    onClicked: errorDialog.accept()
+                }
+                Button {
+                    Layout.preferredWidth: 60
+                    Layout.preferredHeight: 22
+                    Layout.alignment: Qt.AlignHCenter
+                    text: "OK"
+                    onClicked: errorDialog.accept()
+                }
+            }
+
+
+        }
     }
 
     property string defaultFont: "Segoe UI"
