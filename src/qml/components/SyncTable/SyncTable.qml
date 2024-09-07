@@ -16,9 +16,9 @@ Rectangle{
     ListModel{
         id: syncModules
     }
-    function addSyncModule(syncId, type, direction, source, directory)
+    function addSyncModule(syncname, type, direction, source, directory)
     {
-        syncModules.append({syncId: syncId, type: type, direction: direction, source: source, directory: directory})
+        syncModules.append({syncId: syncname, type: type, direction: direction, source: source, directory: directory})
     }
 }
 

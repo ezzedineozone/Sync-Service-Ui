@@ -17,6 +17,23 @@ public:
             return 0;
         }
     }
+    std::string read_message(){
+        std::string msg;
+        for (;;)
+        {
+            std::array<char, 128> buf;
+            std::error_code error;
+
+            size_t len = socket.read_some(asio::buffer(buf), error);
+            if (error == asio::error::eof)
+                break; // Connection closed cleanly by peer.
+            else if (error)
+                throw std::system_error(error); // Some other error.
+
+            msg.append(buf.data(),len);
+        }
+        return msg;
+    }
 private:
     std::string ip;
     std::string port;

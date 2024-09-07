@@ -15,6 +15,7 @@ class AddSyncModule : public QObject
 {
     Q_OBJECT
 private:
+    QString name;
     QString source;
     QString destination;
     QString type;
@@ -36,9 +37,8 @@ public:
         {
             qml_obj = obj;
             meta_obj = metaObj;
-            qDebug() << "Correct type passed";
+            qDebug() << " addsyncmodule Correct type passed";
             QObject::connect(this, SIGNAL(openSignal()),this, SLOT(onOpenSignal()));
-            QObject::connect(obj, SIGNAL(done()), this, SLOT(onDone()));
             QObject::connect(obj, SIGNAL(cancel()), this, SLOT(onCancel()));
             QObject::connect(obj, SIGNAL(sourceFolderAccepted()), this, SLOT(onSourceFolderAccepted()));
             QObject::connect(obj, SIGNAL(destinationFolderAccepted()), this, SLOT(onDestinationFolderAccepted()));
@@ -127,9 +127,6 @@ public slots:
         QString selectedDirection = currentTextProp.read(directionSelector).toString();
         qDebug() << selectedDirection;
         this->direction = selectedDirection;
-    };
-    void onDone(){
-
     };
 };
 

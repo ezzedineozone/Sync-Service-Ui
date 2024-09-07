@@ -18,7 +18,7 @@ ApplicationWindow {
 
 
     id: window
-    width: 265
+    width: 365
     height: 270
     visible: false
     modality: Qt.ApplicationModal
@@ -104,17 +104,20 @@ ApplicationWindow {
         GridLayout{
             anchors.fill: parent
             anchors.margins: 8
-            columns: 2
+            columns: 3
             rows: 5
             ColumnLayout{
                 Layout.row:0
-                Layout.column:0
-                Layout.preferredWidth: parent.width / 2
+                Layout.column:1
+                Layout.preferredWidth: parent.width / 3
                 Layout.preferredHeight: parent.height * 0.3
+                Layout.alignment: Qt.AlignHCenter
                 Text{
+                    Layout.leftMargin: 30
                     text: "Type: "
                 }
                 ComboBox{
+                    Layout.leftMargin: 30
                     objectName: "type_selector"
                     model: sync_types
                     font.pixelSize: 14
@@ -124,9 +127,10 @@ ApplicationWindow {
             }
             ColumnLayout{
                 Layout.row:0
-                Layout.column:1
-                Layout.preferredWidth: parent.width / 2
+                Layout.column:2
+                Layout.preferredWidth: parent.width / 3
                 Layout.preferredHeight: parent.height * 0.3
+                Layout.alignment: Qt.AlignHCenter
                 Text{
                     Layout.leftMargin: 30
                     text: "Direction: "
@@ -140,13 +144,30 @@ ApplicationWindow {
                     onActivated: ()=>{onAcceptedComboBox("direction")}
                 }
             }
+            ColumnLayout{
+                Layout.row:0
+                Layout.column:0
+                Layout.preferredWidth: parent.width / 3
+                Layout.preferredHeight: parent.height * 0.3
+                Layout.alignment: Qt.AlignLeft
+                Text{
+                    text: "Name: "
+                }
+                TextArea{
+                    objectName: "module_name"
+                    Layout.preferredWidth: selected_direction.width
+                    Layout.maximumWidth: selected_direction.width
+                    font.pixelSize: 14
+                    id: module_name
+                }
+            }
 
             ColumnLayout{
                 Layout.row:1
                 Layout.column:0
                 Layout.preferredWidth: parent.width / 2
                 Layout.preferredHeight: parent.height * 0.3
-                Layout.columnSpan: 2
+                Layout.columnSpan: 3
                 Text{
                     text: "Source: "
                     width: parent * 0.3
@@ -179,7 +200,7 @@ ApplicationWindow {
                 Layout.row:2
                 Layout.column:0
                 Layout.preferredWidth: parent.width / 2
-                Layout.columnSpan: 2
+                Layout.columnSpan: 3
                 Text{
                     text: "Destination: "
                     width: parent * 0.1
@@ -211,7 +232,7 @@ ApplicationWindow {
                 Layout.row: 3
                 Layout.column: 0
                 spacing : 3
-                Layout.columnSpan: 2
+                Layout.columnSpan: 3
                 Layout.alignment: Qt.AlignCenter
                 Layout.topMargin: 20
                 CustomButton{

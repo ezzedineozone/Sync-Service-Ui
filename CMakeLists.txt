@@ -15,5 +15,7 @@ set(SOURCES
     src/dependencies/asio/asio.hpp
     src/tcp_client.h
 )
-qt_add_executable(app ${SOURCES})
+qt_add_executable(app ${SOURCES}
+    src/QObjects/SyncTable.h
+)
 target_link_libraries(app PRIVATE Qt6::Gui Qt6::Quick)
