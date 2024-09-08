@@ -17,5 +17,6 @@ set(SOURCES
 )
 qt_add_executable(app ${SOURCES}
     src/QObjects/SyncTable.h
+    src/tcp_client.cpp
 )
 target_link_libraries(app PRIVATE Qt6::Gui Qt6::Quick)

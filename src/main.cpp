@@ -9,11 +9,9 @@
 #include "QObjects/MainWindow.h"
 #include "dependencies/json/json.hpp"
 #include "dependencies/asio/asio.hpp"
-#include "tcp_client.h"
 
 
 MainWindow* mainWindow;
-TcpClient* client;
 int service_started;
 
 
@@ -32,19 +30,10 @@ int add_dummy_modules(){
     SyncTable* sync_table = mainWindow->syncTable;
     // sync_table->add_module();
 }
-int connect_to_service(){
-    client = new TcpClient("127.0.0.1","13");
-    service_started = client->start_connection();
-    return service_started;
-}
 int startup_routine(const QQmlApplicationEngine& engine)
 {
     int objects_instantiated = instantiateObjects(engine);
-    int service_connected = connect_to_service();
-    if(service_connected)
-    {
-
-    }
+    int service_connected = mainWindow->onConnectToService();
     return objects_instantiated & service_connected;
 }
 int main(int argc, char* argv[]){

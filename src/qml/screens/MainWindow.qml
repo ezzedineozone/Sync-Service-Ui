@@ -11,6 +11,14 @@ Window
         readonly property string appVersion: "0.1.0"
     }
     signal addButtonClicked;
+    signal connectToService;
+    signal serviceConnected;
+
+    onServiceConnected: () => {
+        serviceStatus.visible = false;
+        syncTable.visible = true;
+    }
+
     function openAddSyncModulePopup(){
         console.log("main window button clicked");
         addButtonClicked();
@@ -23,7 +31,7 @@ Window
     }
 
     Dialog {
-        id: errorDialog
+        id: mainWindowError
         title: "Error"
         anchors.centerIn: parent
         width: errorLayout.implicitWidth + 20
@@ -44,14 +52,14 @@ Window
                     Layout.preferredHeight: 22
                     Layout.alignment: Qt.AlignHCenter
                     text: "Log"
-                    onClicked: errorDialog.accept()
+                    onClicked: mainWindowError.accept()
                 }
                 Button {
                     Layout.preferredWidth: 60
                     Layout.preferredHeight: 22
                     Layout.alignment: Qt.AlignHCenter
                     text: "OK"
-                    onClicked: errorDialog.accept()
+                    onClicked: mainWindowError.accept()
                 }
             }
 
@@ -120,6 +128,7 @@ Window
            }
        }
         SyncTable{
+           visible: false;
            id: syncTable
            objectName: "syncTable"
            Layout.column:0
@@ -128,6 +137,25 @@ Window
            Layout.topMargin: 10
            Component.onCompleted: syncTable.addSyncModule(1, "local", "oneway", "C://documents" , "C://desktop");
         }
+        Rectangle{
+            id: serviceStatus
+            visible: true
+            Layout.row:2
+            Layout.column:0
+            Layout.topMargin:10
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.columnSpan: mainGridColumns
+            CustomButton{
+                innerText: "Connect To Service"
+                anchors.centerIn: parent
+                border_width: 1
+                behavior: () => {
+                    connectToService();
+                }
+            }
+        }
+
         StatusBar{
             id: mainStatusBar
             displayVersion:true

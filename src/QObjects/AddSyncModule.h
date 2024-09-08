@@ -75,7 +75,7 @@ public:
 
 signals:
     void openSignal();
-    void done();
+    void submit();
     void cancel();
     void sourceFolderAccepted();
     void destinationFolderAccepted();

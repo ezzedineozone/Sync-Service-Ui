@@ -8,7 +8,7 @@ import user.QObjects 1.0;
 ApplicationWindow {
     property string selectedDialog: ""
 
-    signal done;
+    signal done();
     signal cancel;
     signal openSignal;
     signal sourceFolderAccepted();
@@ -22,7 +22,6 @@ ApplicationWindow {
     height: 270
     visible: false
     modality: Qt.ApplicationModal
-    onOpenSignal: () => {visible = true}
 
 
 
@@ -48,6 +47,7 @@ ApplicationWindow {
             console.log("invalid combo box signal");
     }
     function onAddButtonClick(){
+        console.log("calling done signal");
         done();
     }
     function onCancelButtonClick(){

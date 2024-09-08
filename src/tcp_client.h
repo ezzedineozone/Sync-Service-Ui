@@ -2,8 +2,6 @@
 #include "iostream"
 class TcpClient{
 public:
-    TcpClient(std::string ip, std::string port):ip(ip),port(port), io_context(), resolver(io_context), socket(io_context){
-    }
     int start_connection(){
         try{
             asio::ip::tcp::resolver::results_type endpoints =
@@ -16,6 +14,12 @@ public:
             std::cout << "could not establis connection, check if the service is started\n";
             return 0;
         }
+    }
+    static TcpClient& get_instance(const std::string& ip, const std::string& port) {
+        std::call_once(initInstanceFlag, [&]() {
+            instance.reset(new TcpClient(ip, port));
+        });
+        return *instance;
     }
     std::string read_message(){
         std::string msg;
@@ -35,9 +39,18 @@ public:
         return msg;
     }
 private:
+    TcpClient(std::string ip, std::string port):ip(ip),port(port), io_context(), resolver(io_context), socket(io_context){
+    }
+
+
+    static std::unique_ptr<TcpClient> instance;
+    static std::once_flag initInstanceFlag;
+
+
     std::string ip;
     std::string port;
     asio::io_context io_context;
     asio::ip::tcp::resolver resolver;
     asio::ip::tcp::socket socket;
 };
+
