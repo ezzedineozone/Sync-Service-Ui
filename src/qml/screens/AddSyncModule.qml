@@ -15,6 +15,7 @@ ApplicationWindow {
     signal destinationFolderAccepted();
     signal typeSelected;
     signal directionSelected;
+    signal nameModified;
 
 
     id: window
@@ -159,6 +160,9 @@ ApplicationWindow {
                     Layout.maximumWidth: selected_direction.width
                     font.pixelSize: 14
                     id: module_name
+                    onTextChanged: ()=>{
+                        nameModified();
+                    };
                 }
             }
 

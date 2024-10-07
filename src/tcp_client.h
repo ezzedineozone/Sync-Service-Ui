@@ -1,56 +1,37 @@
+#ifndef TCPCLIENT_H
+#define TCPCLIENT_H
 #include "dependencies/asio/asio.hpp"
 #include "iostream"
-class TcpClient{
+#include "sync_module.h"
+#include "QString"
+#include "QtDebug"
+#include "QObject"
+class TcpClient : public QObject, public std::enable_shared_from_this<TcpClient> {
 public:
-    int start_connection(){
-        try{
-            asio::ip::tcp::resolver::results_type endpoints =
-                resolver.resolve(ip,port);
-            asio::connect(socket, endpoints);
-            return 1;
-        }
-        catch(std::exception)
-        {
-            std::cout << "could not establis connection, check if the service is started\n";
-            return 0;
-        }
-    }
-    static TcpClient& get_instance(const std::string& ip, const std::string& port) {
-        std::call_once(initInstanceFlag, [&]() {
-            instance.reset(new TcpClient(ip, port));
-        });
-        return *instance;
-    }
-    std::string read_message(){
-        std::string msg;
-        for (;;)
-        {
-            std::array<char, 128> buf;
-            std::error_code error;
+    static TcpClient& get_instance(const std::string& ip, const std::string& port);
 
-            size_t len = socket.read_some(asio::buffer(buf), error);
-            if (error == asio::error::eof)
-                break; // Connection closed cleanly by peer.
-            else if (error)
-                throw std::system_error(error); // Some other error.
+    int start_connection();
+    int start_reading();
+    void notify_add(const SyncModule& module);
+    void notify_removal(std::string name);
 
-            msg.append(buf.data(),len);
-        }
-        return msg;
-    }
 private:
-    TcpClient(std::string ip, std::string port):ip(ip),port(port), io_context(), resolver(io_context), socket(io_context){
-    }
+    TcpClient(std::string ip, std::string port);
 
-
-    static std::unique_ptr<TcpClient> instance;
+    static std::shared_ptr<TcpClient> instance;
     static std::once_flag initInstanceFlag;
 
+    std::string message_;
+
+    bool started;
 
     std::string ip;
     std::string port;
     asio::io_context io_context;
     asio::ip::tcp::resolver resolver;
-    asio::ip::tcp::socket socket;
+    asio::ip::tcp::socket socket_;
+
+    void notify_success(std::string type, const std::error_code& ec, std::size_t bytes_transferred);
 };
+#endif
 

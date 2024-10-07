@@ -127,19 +127,19 @@ Window
                }
            }
        }
-        SyncTable{
-           visible: false;
+       SyncTable {
            id: syncTable
            objectName: "syncTable"
-           Layout.column:0
-           Layout.row:2
-           Layout.margins: 1
-           Layout.topMargin: 10
-           Component.onCompleted: syncTable.addSyncModule(1, "local", "oneway", "C://documents" , "C://desktop");
-        }
+           Layout.row: 2
+           Layout.fillHeight: true
+           Layout.fillWidth: true
+           Layout.column: 0
+           Layout.columnSpan: mainGridColumns
+           visible: true
+       }
         Rectangle{
             id: serviceStatus
-            visible: true
+            visible: false
             Layout.row:2
             Layout.column:0
             Layout.topMargin:10
