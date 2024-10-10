@@ -3,24 +3,35 @@ import QtQuick.Controls
 import Qt.labs.qmlmodels
 
 Rectangle {
-
-    width: parent.width;
-    height: parent.height;
+    property string cell_main_color: "#F3F3F3"
+    property string cell_secondary_color: "#EBEBEB"
+    property string header_main_color: "#E1E1E1"
+    property string header_secondary_color: "#CFCFCF"
+    property var headerLabels: ["Name", "Source", "Destination", "Type", "Direction"]
+    //below here each will corespond to its respective index in headerLabels, that means 0 corresponds to name, 1 to source etc...
+    property var sizes : [0.1,0.35,0.35,0.1,0.1]
+    id: main_table_rect
     HorizontalHeaderView {
         id: horizontalHeader
         anchors.left: tableView.left
         anchors.top: parent.top
         syncView: tableView
+        anchors.right: tableView.right
         clip: true
         delegate: Item {
-            implicitWidth: tableView.width / tableView.model.columnCount // Adjust width
-            implicitHeight: 35 // Fixed height or can be adjusted as needed
+            implicitHeight: 25
+            implicitWidth: sizes[index] * main_table_rect.width
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: header.color = header_secondary_color
+                onExited: header.color = header_main_color
+            }
 
             Rectangle {
                 anchors.fill: parent
-                color: "#e8e8e8"
-
-                // Left border
+                color: header_main_color
+                id: header
                 Rectangle {
                     width: 1
                     anchors.left: parent.left
@@ -28,8 +39,6 @@ Rectangle {
                     anchors.bottom: parent.bottom
                     color: "#cccaca"
                 }
-
-                // Right border
                 Rectangle {
                     width: 1
                     anchors.right: parent.right
@@ -37,11 +46,9 @@ Rectangle {
                     anchors.bottom: parent.bottom
                     color: "#cccaca"
                 }
-
-                // Main content area
                 Label {
                     anchors.centerIn: parent
-                    text: display
+                    text: headerLabels[index]
                 }
             }
         }
@@ -81,13 +88,19 @@ Rectangle {
         }
 
         delegate: Item {
-            implicitWidth: tableView.width / tableView.model.columnCount
-            implicitHeight: 35
-
-            Rectangle {
-                id: headerRect
+            implicitWidth: main_table_rect.width * sizes[column]
+            implicitHeight: 25
+            MouseArea {
                 anchors.fill: parent
-                color: "#e8e8e8"
+                hoverEnabled: true
+                onEntered: ()=>{rowEntered(row);}
+                onExited: ()=>{rowExited(row);}
+                id: mouseArea_header
+
+            }
+            Rectangle {
+                anchors.fill: parent
+                color: cell_main_color
                 Rectangle {
                     width: 1
                     anchors.left: parent.left
@@ -109,4 +122,13 @@ Rectangle {
             }
         }
     }
+    function rowEntered(rowIndex) {
+
+    }
+
+    function rowExited(rowIndex) {
+
+    }
+
+
 }
