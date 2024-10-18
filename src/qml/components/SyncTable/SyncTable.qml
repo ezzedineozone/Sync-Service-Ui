@@ -10,7 +10,7 @@ Rectangle {
     property string header_secondary_color: "#CFCFCF"
     property var headerLabels: ["Name", "Source", "Destination", "Type", "Direction", "Edit"]
     property bool sortedAscending: true
-    property int sortedColumnIndex: -1
+    property int sortedColumnIndex: 0
     //below here each will corespond to its respective index in headerLabels, that means 0 corresponds to name, 1 to source etc...
     property var sizes : [0.1,0.25,0.25,0.1,0.1,0.2]
     id: main_table_rect
@@ -63,9 +63,15 @@ Rectangle {
                 anchors.right: parent.right
                 anchors.margins: 5
                 id: upArrow
-                source: ((sortedColumnIndex === index )&& sortedAscending)? "qrc:images/icons/downward-arrow.png" : "qrc:images/icons/upward-arrow.png"
-                width: 16  // Set desired width
-                height: 16 // Set desired height
+                source: (sortedColumnIndex === -1)
+                        ? "qrc:images/icons/downward-arrow.png"
+                        : (sortedColumnIndex === index)
+                            ? (sortedAscending
+                                ? "qrc:images/icons/downward-arrow.png"
+                                : "qrc:images/icons/upward-arrow.png")
+                            : "qrc:images/icons/downward-arrow.png"
+                width: 16
+                height: 16
                 anchors.verticalCenter: parent.verticalCenter
             }
         }
@@ -96,15 +102,15 @@ Rectangle {
 
             rows: [
                 {
-                    "name": "cat",
+                    "name": "dog",
                     "source": "C:\\test_folder",
                     "destination": "C:\\test_folder",
                     "type": "local",
-                    "direction" : "one-way",
+                    "direction" : "two-way",
                     "Edit": ""
                 },
                 {
-                    "name": "dog",
+                    "name": "cat",
                     "source": "C:\\test_folder",
                     "destination": "C:\\test_folder",
                     "type": "local",
@@ -175,8 +181,23 @@ Rectangle {
     function rowExited(rowIndex) {
 
     }
-
     function reverseSort(column) {
+        debugger;
+        if (sortedColumnIndex !== column) {
+            sortedColumnIndex = column;
+            sortedAscending = false;
+            sortDesc(column);
+        } else {
+            sortedAscending = !sortedAscending;
+            if(sortedAscending)
+                sortAsc(column);
+            else
+                sortDesc(column);
+        }
+    }
+    function sortAsc(column)
+    {
+        sortedAscending = true;
         sortedColumnIndex = column;
         tableView.model.rows = tableView.model.rows.slice().sort(function(a, b) {
             let valueA = a[tableView.model.columns[column].display];
@@ -185,13 +206,38 @@ Rectangle {
                 valueA = valueA.toLowerCase();
                 valueB = valueB.toLowerCase();
             }
-            if (sortedAscending) {
-                return valueA > valueB ? 1 : (valueA < valueB ? -1 : 0);
-            } else {
-                return valueA < valueB ? 1 : (valueA > valueB ? -1 : 0);
-            }
+            return valueA > valueB ? 1 : (valueA < valueB ? -1 : 0);
         });
-        sortedAscending = !sortedAscending
+    }
+    function sortDesc(column)
+    {
+        sortedAscending = false;
+        sortedColumnIndex = column;
+        tableView.model.rows = tableView.model.rows.slice().sort(function(a, b) {
+            let valueA = a[tableView.model.columns[column].display];
+            let valueB = b[tableView.model.columns[column].display];
+            if (typeof valueA === "string") {
+                valueA = valueA.toLowerCase();
+                valueB = valueB.toLowerCase();
+            }
+            return valueA < valueB ? 1 : (valueA > valueB ? -1 : 0);
+        });
     }
 
+    Component.onCompleted: ()=>{
+       sortedColumnIndex = 0;
+       tableView.model.rows = tableView.model.rows.slice().sort(function(a, b) {
+           let valueA = a[tableView.model.columns[0].display];
+           let valueB = b[tableView.model.columns[0].display];
+           if (typeof valueA === "string") {
+               valueA = valueA.toLowerCase();
+               valueB = valueB.toLowerCase();
+           }
+           if (sortedAscending) {
+               return valueA > valueB ? 1 : (valueA < valueB ? -1 : 0);
+           } else {
+               return valueA < valueB ? 1 : (valueA > valueB ? -1 : 0);
+           }
+       });
+    }
 }
