@@ -35,6 +35,7 @@ public:
             QMetaObject::Connection connection2 = QObject::connect(addSyncModule->qObj, SIGNAL(done()), this, SLOT(onDone()));
             QMetaObject::Connection connection3 = QObject::connect(qObj, SIGNAL(connectToService()), this, SLOT(onConnectToService()));
             QMetaObject::Connection connection4 = QObject::connect(this, SIGNAL(serviceConnected()), obj, SIGNAL(serviceConnected()));
+            QMetaObject::Connection connection5 = QObject::connect(this, SIGNAL(serviceConnected()),table, SIGNAL(serviceConnected()));
             if(!connection2)
                 qDebug() << "failed to connect signals";
         }
@@ -51,6 +52,7 @@ public slots:
     int onConnectToService(){
         QFuture<int> future = QtConcurrent::run([=]() {
             TcpClient& client = TcpClient::get_instance("127.0.0.1", "13");
+            TcpClient::connect_objects(syncTable, addSyncModule);
             int connection_started = client.start_connection();
             return connection_started;
         });
@@ -67,7 +69,5 @@ public slots:
         watcher->setFuture(future);
     }
 };
-
-
 #endif
 

@@ -12,6 +12,7 @@
 
 
 MainWindow* mainWindow;
+std::vector<SyncModule*> modules;
 int service_started;
 
 
@@ -22,19 +23,15 @@ int instantiateObjects(const QQmlApplicationEngine& engine){
     qDebug() << addSyncModuleWindowQObj;
     AddSyncModule* addSyncModule = new AddSyncModule(addSyncModuleWindowQObj);
     QObject* syncTableQObj = root_obj->findChild<QObject *>("syncTable");
-    SyncTable* table = new SyncTable(syncTableQObj);
+    SyncTable* table = new SyncTable(syncTableQObj, modules);
     mainWindow = new MainWindow(root_obj, addSyncModule, table);
     return 1;
-}
-int add_dummy_modules(){
-    SyncTable* sync_table = mainWindow->syncTable;
-    // sync_table->add_module();
 }
 int startup_routine(const QQmlApplicationEngine& engine)
 {
     int objects_instantiated = instantiateObjects(engine);
-    int service_connected = mainWindow->onConnectToService();
-    return objects_instantiated & service_connected;
+    int service_connected_started = mainWindow->onConnectToService();
+    return objects_instantiated & service_connected_started;
 }
 int main(int argc, char* argv[]){
     QGuiApplication app(argc, argv);

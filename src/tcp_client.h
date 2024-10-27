@@ -6,20 +6,31 @@
 #include "QString"
 #include "QtDebug"
 #include "QObject"
+#include <QFuture>
+#include <QtConcurrent/QtConcurrent>
+#include "dependencies/json/json.hpp"
+#include "QObjects/SyncTable.h"
+class AddSyncModule;
+class SyncTable;
 class TcpClient : public QObject, public std::enable_shared_from_this<TcpClient> {
+    Q_OBJECT
 public:
     static TcpClient& get_instance(const std::string& ip, const std::string& port);
+    static void connect_objects(SyncTable* table, AddSyncModule* addSync);
 
     int start_connection();
     int start_reading();
     void notify_add(const SyncModule& module);
     void notify_removal(std::string name);
+    int command_handler(nlohmann::json j);
 
 private:
     TcpClient(std::string ip, std::string port);
 
     static std::shared_ptr<TcpClient> instance;
     static std::once_flag initInstanceFlag;
+
+    std::string vectorToString(const std::vector<SyncModule>& vector);
 
     std::string message_;
 
@@ -30,6 +41,10 @@ private:
     asio::io_context io_context;
     asio::ip::tcp::resolver resolver;
     asio::ip::tcp::socket socket_;
+    static SyncTable* sync_table;
+    static AddSyncModule* add_sync_module;
+
+    int get_index_of_delimitter(std::string);
 
     void notify_success(std::string type, const std::error_code& ec, std::size_t bytes_transferred);
 };

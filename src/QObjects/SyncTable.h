@@ -10,6 +10,9 @@
 #include <QVariant>
 #include <QString>
 #include "../helper.h"
+#include "../sync_module.h"
+#include <filesystem>
+namespace  fs = std::filesystem;
 class SyncTable : public QObject
 {
     Q_OBJECT
@@ -17,12 +20,16 @@ private:
 
 public:
     QObject* qObj;
-    SyncTable(QObject* obj){
-        const QMetaObject* metaObj = obj->metaObject();
-        qObj = obj;
+    std::vector<SyncModule*>& modules;
+    SyncTable(QObject* obj, std::vector<SyncModule*>& modules): qObj(obj), modules(modules){
+        const QMetaObject* metaObj = qObj->metaObject();
         char* className = new char[strlen(metaObj->className()) - 2];
-        helper::getQmlClasstype(obj, className);
+        helper::getQmlClasstype(qObj, className);
         qDebug() << className;
+        QMetaObject::Connection connection = QObject::connect(this, SIGNAL(serviceConnected()),this, SLOT(onServiceConnected()));
+        QMetaObject::Connection connection3 = QObject::connect(this, SIGNAL(moduleAdded(QString, QString, QString, QString, QString)),qObj, SIGNAL(moduleAdded(QString, QString , QString , QString , QString)));
+        //QMetaObject::Connection connection3 = QObject::connect(this, SIGNAL(moduleAdded(QString name, QString source, QString destination, QString type, QString direction)),qObj, SLOT(onModuleAdded(QString name, QString source, QString destination, QString type, QString direction)));
+        QMetaObject::Connection connection2 = QObject::connect(this, SIGNAL(modulesFetched(std::vector<SyncModule*>)), this, SLOT(onModulesFetched(std::vector<SyncModule*>)));
         if(!strcmp(className,"SyncTable_QMLTYPE")){
             qDebug() << " synctable Correct type passed";
         }
@@ -30,15 +37,29 @@ public:
             qDebug() << "incorrect type passed";
         }
     }
-    Q_INVOKABLE int add_module(const QString& qmlObjectName, const QString& syncId, const QString& type, const QString& direction, const QString& source, const QString& directory) {
+signals:
+    void modulesFetched(std::vector<SyncModule*> init_modules);
+    void serviceConnected();
+    void moduleAdded(QString name, QString source, QString destination, QString type, QString direction);
 
-        if (qObj) {
-            // Call the addSyncModule function
-            QMetaObject::invokeMethod(qObj, "addSyncModule", Q_ARG(QString, syncId), Q_ARG(QString, type), Q_ARG(QString, direction), Q_ARG(QString, source), Q_ARG(QString, directory));
-        } else {
-            qWarning() << "QML object not found";
+public slots:
+    void onServiceConnected(){
+
+    };
+    void onModulesFetched(std::vector<SyncModule*> init_modules){
+        for(SyncModule* module : init_modules)
+        {
+            this->modules.push_back(module);
+            emit moduleAdded(
+                QString::fromStdString(module->name),                // Assuming name is a std::string
+                QString::fromUtf8(module->source.u8string().c_str()), // Assuming source is a std::filesystem::path
+                QString::fromUtf8(module->destination.u8string().c_str()), // Assuming destination is a std::filesystem::path
+                QString::fromStdString(module->type),                // Assuming type is a std::string
+                QString::fromStdString(module->direction)            // Assuming direction is a std::string
+            );
         }
-    }
+    };
+
 };
 
 

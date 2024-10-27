@@ -11,6 +11,10 @@ Rectangle {
     property var headerLabels: ["Name", "Source", "Destination", "Type", "Direction", "Edit"]
     property bool sortedAscending: true
     property int sortedColumnIndex: 0
+    signal moduleAdded(string name, string source, string destination, string type, string direction)
+    onModuleAdded : function(name, source, destination, type, direction){
+        addModule(name, source, destination, type, direction);
+    }
     //below here each will corespond to its respective index in headerLabels, that means 0 corresponds to name, 1 to source etc...
     property var sizes : [0.1,0.25,0.25,0.1,0.1,0.2]
     id: main_table_rect
@@ -101,22 +105,6 @@ Rectangle {
             TableModelColumn {display : "edit"}
 
             rows: [
-                {
-                    "name": "dog",
-                    "source": "C:\\test_folder",
-                    "destination": "C:\\test_folder",
-                    "type": "local",
-                    "direction" : "two-way",
-                    "Edit": ""
-                },
-                {
-                    "name": "cat",
-                    "source": "C:\\test_folder",
-                    "destination": "C:\\test_folder",
-                    "type": "local",
-                    "direction" : "one-way",
-                    "Edit": ""
-                },
             ]
         }
 
@@ -222,6 +210,45 @@ Rectangle {
             }
             return valueA < valueB ? 1 : (valueA > valueB ? -1 : 0);
         });
+    }
+    function addModule(name, source, destination, type, direction)
+    {
+        let module = {
+            name: name,
+            source: source,
+            destination: destination,
+            type: type,
+            direction: direction,
+            edit: ""
+        }
+        let col_name = tableView.model.columns[sortedColumnIndex];
+        let indexAfter = -1;
+        let newArray = tableView.model.rows;
+        if(sortedAscending)
+        {
+            for(let k = 0; k < tableView.model.rows.length; k++)
+            {
+                let col_value = module[tableView.model.columns[sortedColumnIndex].display]
+                if(col_value.toLowerCase() < tableView.model.rows[k][tableView.model.columns[sortedColumnIndex].display].toLowerCase())
+                {
+                    break;
+                }
+                indexAfter = k;
+            }
+        }
+        else{
+            for(let i = 0; i < tableView.model.rows.length; i++)
+            {
+                let col_value = module[tableView.model.columns[sortedColumnIndex].display]
+                if(col_value.toLowerCase() >= tableView.model.rows[i][tableView.model.columns[sortedColumnIndex].display].toLowerCase())
+                {
+                    break;
+                }
+                indexAfter = i;
+            }
+        }
+        newArray.splice(indexAfter + 1, 0, module);
+        tableView.model.rows = newArray;
     }
 
     Component.onCompleted: ()=>{
