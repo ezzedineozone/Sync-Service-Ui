@@ -30,6 +30,7 @@ qt_add_executable(app ${SOURCES}
     src/tcp_client.cpp
     src/sync_module.cpp
     src/sync_info.cpp
+    src/QObjects/ErrorModal.h
 )
 
 target_link_libraries(app PRIVATE Qt6::Gui Qt6::Quick)

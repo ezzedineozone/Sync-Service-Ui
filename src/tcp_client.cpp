@@ -1,10 +1,13 @@
 #include "tcp_client.h"
 #include "QObjects/AddSyncModule.h"
 #include "QObjects/SyncTable.h"
+#include "QString"
 std::shared_ptr<TcpClient> TcpClient::instance;
 std::once_flag TcpClient::initInstanceFlag;
 SyncTable* TcpClient::sync_table = nullptr;
 AddSyncModule* TcpClient::add_sync_module = nullptr;
+ErrorModal* TcpClient::error_modal = nullptr;
+
 
 TcpClient& TcpClient::get_instance(const std::string& ip, const std::string& port) {
     std::call_once(initInstanceFlag, [&]() {
@@ -16,10 +19,11 @@ TcpClient& TcpClient::get_instance(const std::string& ip, const std::string& por
 TcpClient::TcpClient(std::string ip, std::string port)
     : ip(std::move(ip)), port(std::move(port)), io_context(), resolver(io_context), socket_(io_context) {}
 
-void TcpClient::connect_objects(SyncTable* table, AddSyncModule* addSync)
+void TcpClient::connect_objects(SyncTable* table, AddSyncModule* addSync, ErrorModal* modal)
 {
     sync_table = table;
     add_sync_module = addSync;
+    TcpClient::error_modal = modal;
 }
 int TcpClient::start_connection() {
     try {
@@ -95,6 +99,22 @@ int TcpClient::command_handler(nlohmann::json j){
             }
         }
         emit sync_table->modulesFetched(modules);
+    }
+    else if(command == "add")
+    {
+        nlohmann::json module = j["data"]; // its fine to not use new this object will only be used for ease of extracton of strings and then destroyed, the obj will be saved later in SyncTable
+        emit sync_table->moduleAdded(
+            QString::fromStdString(module["name"]),
+            QString::fromStdString(module["source"]),
+            QString::fromStdString(module["destination"]),
+            QString::fromStdString(module["type"]),
+            QString::fromStdString(module["direction"])
+        );
+    }
+    else if (command == "-1")
+    {
+        QString errorMsg = QString("Command: \"%1\"\nError Message: %2").arg(QString::fromStdString(command)).arg(QString::fromStdString(j["data"]));
+        emit TcpClient::error_modal->errorThrown(errorMsg);
     }
 }
 std::string TcpClient::vectorToString(const std::vector<SyncModule>& modules) {

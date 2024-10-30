@@ -13,6 +13,7 @@
 #include "AddSyncModule.h"
 #include "SyncTable.h"
 #include "../tcp_client.h"
+#include "ErrorModal.h"
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
 class MainWindow : public QObject
@@ -24,7 +25,8 @@ public:
     QObject* qObj;
     AddSyncModule* addSyncModule;
     SyncTable* syncTable;
-    MainWindow(QObject* obj, AddSyncModule* module, SyncTable* table): qObj(obj), addSyncModule(module), syncTable(table){
+    ErrorModal* modal;
+    MainWindow(QObject* obj, AddSyncModule* module, SyncTable* table, ErrorModal* modal): qObj(obj), addSyncModule(module), syncTable(table), modal(modal){
         const QMetaObject* metaObj = obj->metaObject();
         char* className = new char[strlen(metaObj->className()) - 2];
         helper::getQmlClasstype(obj, className);
@@ -52,7 +54,7 @@ public slots:
     int onConnectToService(){
         QFuture<int> future = QtConcurrent::run([=]() {
             TcpClient& client = TcpClient::get_instance("127.0.0.1", "13");
-            TcpClient::connect_objects(syncTable, addSyncModule);
+            TcpClient::connect_objects(syncTable, addSyncModule, modal);
             int connection_started = client.start_connection();
             return connection_started;
         });

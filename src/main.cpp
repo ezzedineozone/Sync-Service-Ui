@@ -23,8 +23,10 @@ int instantiateObjects(const QQmlApplicationEngine& engine){
     qDebug() << addSyncModuleWindowQObj;
     AddSyncModule* addSyncModule = new AddSyncModule(addSyncModuleWindowQObj);
     QObject* syncTableQObj = root_obj->findChild<QObject *>("syncTable");
+    QObject* error_modal = root_obj->findChild<QObject *>("modal_error");
+    ErrorModal* modal = new ErrorModal(error_modal);
     SyncTable* table = new SyncTable(syncTableQObj, modules);
-    mainWindow = new MainWindow(root_obj, addSyncModule, table);
+    mainWindow = new MainWindow(root_obj, addSyncModule, table, modal);
     return 1;
 }
 int startup_routine(const QQmlApplicationEngine& engine)

@@ -10,13 +10,14 @@
 #include <QtConcurrent/QtConcurrent>
 #include "dependencies/json/json.hpp"
 #include "QObjects/SyncTable.h"
+#include "QObjects/ErrorModal.h"
 class AddSyncModule;
 class SyncTable;
 class TcpClient : public QObject, public std::enable_shared_from_this<TcpClient> {
     Q_OBJECT
 public:
     static TcpClient& get_instance(const std::string& ip, const std::string& port);
-    static void connect_objects(SyncTable* table, AddSyncModule* addSync);
+    static void connect_objects(SyncTable* table, AddSyncModule* addSync, ErrorModal* modal);
 
     int start_connection();
     int start_reading();
@@ -43,7 +44,7 @@ private:
     asio::ip::tcp::socket socket_;
     static SyncTable* sync_table;
     static AddSyncModule* add_sync_module;
-
+    static ErrorModal* error_modal;
     int get_index_of_delimitter(std::string);
 
     void notify_success(std::string type, const std::error_code& ec, std::size_t bytes_transferred);

@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import "../components"
 import "../components/SyncTable"
 import QtQuick.Controls
+import QtQuick.Dialogs
 
 Window
 {
@@ -33,6 +34,7 @@ Window
     Dialog {
         id: mainWindowError
         title: "Error"
+        objectName: "modal_error"
         anchors.centerIn: parent
         width: errorLayout.implicitWidth + 20
         height: errorLayout.implicitHeight + 40

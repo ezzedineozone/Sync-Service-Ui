@@ -28,8 +28,8 @@ public:
         qDebug() << className;
         QMetaObject::Connection connection = QObject::connect(this, SIGNAL(serviceConnected()),this, SLOT(onServiceConnected()));
         QMetaObject::Connection connection3 = QObject::connect(this, SIGNAL(moduleAdded(QString, QString, QString, QString, QString)),qObj, SIGNAL(moduleAdded(QString, QString , QString , QString , QString)));
-        //QMetaObject::Connection connection3 = QObject::connect(this, SIGNAL(moduleAdded(QString name, QString source, QString destination, QString type, QString direction)),qObj, SLOT(onModuleAdded(QString name, QString source, QString destination, QString type, QString direction)));
         QMetaObject::Connection connection2 = QObject::connect(this, SIGNAL(modulesFetched(std::vector<SyncModule*>)), this, SLOT(onModulesFetched(std::vector<SyncModule*>)));
+                QMetaObject::Connection connection4 = QObject::connect(this, SIGNAL(moduleAdded(QString, QString, QString, QString, QString)),qObj, SLOT(onModuleAdded(QString, QString , QString , QString , QString)));
         if(!strcmp(className,"SyncTable_QMLTYPE")){
             qDebug() << " synctable Correct type passed";
         }
@@ -44,7 +44,6 @@ signals:
 
 public slots:
     void onServiceConnected(){
-
     };
     void onModulesFetched(std::vector<SyncModule*> init_modules){
         for(SyncModule* module : init_modules)
@@ -55,10 +54,13 @@ public slots:
                 QString::fromUtf8(module->source.u8string().c_str()), // Assuming source is a std::filesystem::path
                 QString::fromUtf8(module->destination.u8string().c_str()), // Assuming destination is a std::filesystem::path
                 QString::fromStdString(module->type),                // Assuming type is a std::string
-                QString::fromStdString(module->direction)            // Assuming direction is a std::string
+                QString::fromStdString(module->direction)
             );
         }
     };
+    void onModuleAdded(QString name, QString source, QString destination, QString type, QString direction){
+        qDebug() << "Module added from QML";
+    }
 
 };
 
