@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(ProjectSync VERSION 1.0)
-
-find_package(Qt6 6.2 COMPONENTS Quick Gui REQUIRED)
-qt_standard_project_setup(REQUIRES 6.5)
-
+set(QT_QML_IMPORT_PATH "${CMAKE_PREFIX_PATH}/qml")
+find_package(Qt6 6.8 COMPONENTS Core Quick Gui REQUIRED)
+qt_standard_project_setup(REQUIRES 6.8)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
