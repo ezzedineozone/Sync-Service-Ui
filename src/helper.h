@@ -2,24 +2,28 @@
 #include <QMetaObject>
 #include <QtDebug>
 #include <QMetaProperty>
+#include <string>
+#include "sstream"
 #ifndef HELPER_H
 #define HELPER_H
 class helper{
 public:
-    static void getQmlClasstype(QObject* obj, char* result)
-    {
+    static std::string getQmlClasstype(QObject* obj) {
         const QMetaObject* metaObj = obj->metaObject();
-        const char* className = metaObj->className();
-        size_t classNameLen = strlen(className);
-
-        // Ensure we have at least 3 characters to remove
-        if (classNameLen > 3) {
-            strncpy(result, className, classNameLen - 3);
-            result[classNameLen - 3] = '\0';  // Null-terminate the result string
-        } else {
-            // Handle cases where className is too short
-            result[0] = '\0';  // Set result to an empty string
+        std::string className = metaObj->className();
+        std::vector<std::string> parts;
+        std::stringstream ss(className);
+        std::string item;
+        while (std::getline(ss, item, '_')) {
+            parts.push_back(item);
         }
+        if (parts.size() >= 2) {
+            return parts[0] + "_" + parts[1];
+        } else if (parts.size() == 1) {
+            return parts[0];
+        }
+
+        return "";
     }
     static void printProperties(QObject* obj)
     {

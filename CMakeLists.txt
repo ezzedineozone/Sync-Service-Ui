@@ -22,6 +22,7 @@ set(SOURCES
     src/tcp_client.h
     src/sync_module.h
     src/sync_info.h
+    src/helper.h
 )
 
 qt_add_executable(app ${SOURCES}

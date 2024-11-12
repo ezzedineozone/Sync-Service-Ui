@@ -97,15 +97,24 @@ Rectangle {
         clip: true
 
         model: TableModel {
-            TableModelColumn { display: "name" }
-            TableModelColumn { display: "source" }
+            TableModelColumn {display: "name" }
+            TableModelColumn {display: "source" }
             TableModelColumn {display: "destination"}
             TableModelColumn {display: "type"}
             TableModelColumn {display: "direction"}
             TableModelColumn {display : "edit"}
 
             rows: [
+                { name: "Item 1", source: "src1", destination: "dest1", type: "type1", direction: "dir1", edit: "edit1" },
+                { name: "Item 2", source: "src2", destination: "dest2", type: "type2", direction: "dir2", edit: "edit2" },
+                { name: "Item 3", source: "src3", destination: "dest3", type: "type1", direction: "dir3", edit: "edit3" },
+                { name: "Item 4", source: "src4", destination: "dest1", type: "type2", direction: "dir1", edit: "edit4" },
+                { name: "Item 5", source: "src5", destination: "dest2", type: "type1", direction: "dir2", edit: "edit5" },
+                { name: "Item 6", source: "src6", destination: "dest3", type: "type3", direction: "dir1", edit: "edit6" },
+                { name: "Item 7", source: "src7", destination: "dest4", type: "type1", direction: "dir2", edit: "edit7" },
+                { name: "Item 8", source: "src8", destination: "dest5", type: "type2", direction: "dir3", edit: "edit8" }
             ]
+
         }
 
         delegate: Item {
@@ -223,12 +232,13 @@ Rectangle {
         }
         let col_name = tableView.model.columns[sortedColumnIndex];
         let indexAfter = -1;
-        let newArray = tableView.model.rows;
+        let newArray = tableView.model.rows.slice();
+
         if(sortedAscending)
         {
             for(let k = 0; k < tableView.model.rows.length; k++)
             {
-                let col_value = module[tableView.model.columns[sortedColumnIndex].display]
+                let col_value = module[tableView.model.columns[sortedColumnIndex].display];
                 if(col_value.toLowerCase() < tableView.model.rows[k][tableView.model.columns[sortedColumnIndex].display].toLowerCase())
                 {
                     break;
@@ -236,10 +246,10 @@ Rectangle {
                 indexAfter = k;
             }
         }
-        else{
+        else {
             for(let i = 0; i < tableView.model.rows.length; i++)
             {
-                let col_value = module[tableView.model.columns[sortedColumnIndex].display]
+                let col_value = module[tableView.model.columns[sortedColumnIndex].display];
                 if(col_value.toLowerCase() >= tableView.model.rows[i][tableView.model.columns[sortedColumnIndex].display].toLowerCase())
                 {
                     break;
@@ -247,6 +257,7 @@ Rectangle {
                 indexAfter = i;
             }
         }
+
         newArray.splice(indexAfter + 1, 0, module);
         tableView.model.rows = newArray;
     }

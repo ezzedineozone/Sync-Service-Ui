@@ -15,6 +15,7 @@
 #include "../tcp_client.h"
 #include <filesystem>
 #include "QDir"
+#include "string"
 namespace fs = std::filesystem;
 
 class AddSyncModule : public QObject
@@ -35,11 +36,10 @@ public:
     AddSyncModule(QObject* obj): type(QString("local")), direction(QString("one-way")){
         const QMetaObject* metaObj = obj->metaObject();
         this->qObj = obj;
-        char* className = new char[strlen(metaObj->className()) - 2];
-        helper::getQmlClasstype(obj, className);
+        std::string className = helper::getQmlClasstype(obj);
         qDebug() << className;
-        int result = strcmp(className,"AddSyncModule_QMLTYPE");
-        if (result == 0)
+        int result = (className == "AddSyncModule_QMLTYPE");
+        if (result)
         {
             qml_obj = obj;
             meta_obj = metaObj;

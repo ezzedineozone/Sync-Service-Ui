@@ -30,20 +30,6 @@ int TcpClient::start_connection() {
         asio::ip::tcp::resolver::results_type endpoints = resolver.resolve(ip, port);
         asio::connect(socket_, endpoints);
         this->started = true;
-
-        QFuture<int> future = QtConcurrent::run([=]() {
-            return start_reading();
-        });
-
-        QFutureWatcher<int>* watcher = new QFutureWatcher<int>();
-        connect(watcher, &QFutureWatcher<int>::finished, [=]() {
-            int finished_reading = watcher->result();
-            if (finished_reading) {
-                qDebug() << "Finished reading successfully.";
-            }
-            watcher->deleteLater();
-        });
-        watcher->setFuture(future);
         return 1;
     } catch (std::exception&) {
         std::cout << "could not establish connection, check if the service is started\n";
@@ -116,6 +102,7 @@ int TcpClient::command_handler(nlohmann::json j){
         QString errorMsg = QString("Command: \"%1\"\nError Message: %2").arg(QString::fromStdString(command)).arg(QString::fromStdString(j["data"]));
         emit TcpClient::error_modal->errorThrown(errorMsg);
     }
+    return 1;
 }
 std::string TcpClient::vectorToString(const std::vector<SyncModule>& modules) {
     std::ostringstream oss;

@@ -23,14 +23,14 @@ public:
     std::vector<SyncModule*>& modules;
     SyncTable(QObject* obj, std::vector<SyncModule*>& modules): qObj(obj), modules(modules){
         const QMetaObject* metaObj = qObj->metaObject();
-        char* className = new char[strlen(metaObj->className()) - 2];
-        helper::getQmlClasstype(qObj, className);
+        std::string className = helper::getQmlClasstype(obj);
         qDebug() << className;
+        int result = (className == "SyncTable_QMLTYPE");
         QMetaObject::Connection connection = QObject::connect(this, SIGNAL(serviceConnected()),this, SLOT(onServiceConnected()));
         QMetaObject::Connection connection3 = QObject::connect(this, SIGNAL(moduleAdded(QString, QString, QString, QString, QString)),qObj, SIGNAL(moduleAdded(QString, QString , QString , QString , QString)));
         QMetaObject::Connection connection2 = QObject::connect(this, SIGNAL(modulesFetched(std::vector<SyncModule*>)), this, SLOT(onModulesFetched(std::vector<SyncModule*>)));
-                QMetaObject::Connection connection4 = QObject::connect(this, SIGNAL(moduleAdded(QString, QString, QString, QString, QString)),qObj, SLOT(onModuleAdded(QString, QString , QString , QString , QString)));
-        if(!strcmp(className,"SyncTable_QMLTYPE")){
+        QMetaObject::Connection connection4 = QObject::connect(this, SIGNAL(moduleAdded(QString, QString, QString, QString, QString)),qObj, SIGNAL(moduleAdded(QString, QString , QString , QString , QString)));
+        if(result){
             qDebug() << " synctable Correct type passed";
         }
         else {

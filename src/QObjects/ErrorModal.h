@@ -19,7 +19,7 @@ public:
     QObject* qObj;
     ErrorModal(QObject* obj): qObj(obj){
         const QMetaObject* metaObj = qObj->metaObject();
-        QMetaObject::Connection connection = QObject::connect(this, SIGNAL(errorThrow(QString)),this, SLOT(onErrorThrown(QString)));
+        QMetaObject::Connection connection = QObject::connect(this, SIGNAL(errorThrown(QString)),this, SLOT(onErrorThrown(QString)));
     }
 signals:
     void errorThrown(QString msg);
