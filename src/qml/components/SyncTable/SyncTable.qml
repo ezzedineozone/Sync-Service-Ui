@@ -99,10 +99,13 @@ Rectangle {
         anchors.top: horizontalHeader.bottom
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        property int selectedRow: -1
+        property bool selectedRowMutex: false
         clip: true
         interactive: false
+
         ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AlwaysOn  // Shows the scrollbar all the time
+                    policy: ScrollBar.AlwaysOn
                 }
         ScrollBar.horizontal: ScrollBar{
             policy: ScrollBar.AlwaysOn
@@ -140,13 +143,16 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 hoverEnabled: true
-                onEntered: ()=>{rowEntered(row);}
-                onExited: ()=>{rowExited(row);}
+                onEntered: ()=>{tableView.selectedRow = row}
+                onExited: ()=>{
+                    tableView.selectedRow = -1
+                }
+
                 id: mouseArea_header
             }
             Rectangle {
                 anchors.fill: parent
-                color: cell_main_color
+                color: row === tableView.selectedRow ? "lightblue" : cell_main_color
                 Rectangle {
                     width: 0.5
                     anchors.left: parent.left
@@ -190,13 +196,6 @@ Rectangle {
         }
     }
 
-    function rowEntered(rowIndex) {
-
-    }
-
-    function rowExited(rowIndex) {
-
-    }
     function reverseSort(column) {
         debugger;
         if (sortedColumnIndex !== column) {
