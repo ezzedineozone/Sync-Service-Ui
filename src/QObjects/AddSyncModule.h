@@ -92,7 +92,6 @@ signals:
 public slots:
     void onDone(){
         SyncModule module(this->name.toStdString(), fs::path(this->source.toStdString()), fs::path(this->destination.toStdString()), this->type.toStdString(), this->direction.toStdString());
-        qDebug() << module.to_string();
         TcpClient& client = TcpClient::get_instance("127.0.0.1","13");
         client.notify_add(module);
     }

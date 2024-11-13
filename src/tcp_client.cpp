@@ -61,7 +61,6 @@ int TcpClient::start_reading() {
         size_t pos = msg.find(delimitter);
         if(pos != std::string::npos)
         {
-            qDebug() << msg;
             size_t pos0 = 0;
             size_t pos1 = pos;
             std::string obj_sent = msg.substr(pos0,pos1);

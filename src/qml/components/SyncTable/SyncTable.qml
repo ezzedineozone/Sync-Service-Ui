@@ -24,12 +24,17 @@ Rectangle {
         anchors.top: parent.top
         syncView: tableView
         anchors.right: tableView.right
-        clip: true
+        interactive: false
+
         delegate: Item {
             implicitHeight: 25
             implicitWidth: sizes[index] * main_table_rect.width
+
             MouseArea {
-                anchors.fill: parent
+                anchors.left: parent.left
+                anchors.leftMargin: 3
+                height: parent.height
+                width: parent.width - 9
                 hoverEnabled: true
                 onEntered: header.color = header_secondary_color
                 onExited: header.color = header_main_color
@@ -95,7 +100,19 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         clip: true
-
+        interactive: false
+        ScrollBar.vertical: ScrollBar {
+                    policy: ScrollBar.AlwaysOn  // Shows the scrollbar all the time
+                }
+        ScrollBar.horizontal: ScrollBar{
+            policy: ScrollBar.AlwaysOn
+        }
+        columnWidthProvider: function(column) {
+            let width = explicitColumnWidth(column);
+            if (width >= 0)
+                return Math.max(width, 100);
+            return explicitColumnWidth(column);
+        }
         model: TableModel {
             TableModelColumn {display: "name" }
             TableModelColumn {display: "source" }
@@ -105,7 +122,7 @@ Rectangle {
             TableModelColumn {display : "edit"}
 
             rows: [
-                { name: "Item 1", source: "src1", destination: "dest1", type: "type1", direction: "dir1", edit: "edit1" },
+                { name: "Item 102918653901283691023690136827091237568", source: "HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLA", destination: "dest1", type: "type1", direction: "dir1", edit: "edit1" },
                 { name: "Item 2", source: "src2", destination: "dest2", type: "type2", direction: "dir2", edit: "edit2" },
                 { name: "Item 3", source: "src3", destination: "dest3", type: "type1", direction: "dir3", edit: "edit3" },
                 { name: "Item 4", source: "src4", destination: "dest1", type: "type2", direction: "dir1", edit: "edit4" },
@@ -126,7 +143,6 @@ Rectangle {
                 onEntered: ()=>{rowEntered(row);}
                 onExited: ()=>{rowExited(row);}
                 id: mouseArea_header
-
             }
             Rectangle {
                 anchors.fill: parent
@@ -149,7 +165,9 @@ Rectangle {
                     anchors.fill: parent
                     Loader {
                         property string cellText: column === 5 ? "Edit" : display
-                        anchors.centerIn: parent
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: 3
                         sourceComponent: column === 5 ? cell_actionsDelegate : cell_textDelegate
                     }
                 }
@@ -159,15 +177,16 @@ Rectangle {
     Component{
         id: cell_textDelegate
         Label{
-            anchors.centerIn: parent
             text: cellText
         }
     }
     Component{
         id: cell_actionsDelegate
-        Label{
-            anchors.centerIn: parent
+        Text{
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
             text: cellText
+            elide: Text.ElideRight
         }
     }
 

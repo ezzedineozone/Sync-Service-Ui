@@ -28,13 +28,19 @@ public:
         int result = (className == "SyncTable_QMLTYPE");
         QMetaObject::Connection connection = QObject::connect(this, SIGNAL(serviceConnected()),this, SLOT(onServiceConnected()));
         QMetaObject::Connection connection3 = QObject::connect(this, SIGNAL(moduleAdded(QString, QString, QString, QString, QString)),qObj, SIGNAL(moduleAdded(QString, QString , QString , QString , QString)));
-        QMetaObject::Connection connection2 = QObject::connect(this, SIGNAL(modulesFetched(std::vector<SyncModule*>)), this, SLOT(onModulesFetched(std::vector<SyncModule*>)));
-        QMetaObject::Connection connection4 = QObject::connect(this, SIGNAL(moduleAdded(QString, QString, QString, QString, QString)),qObj, SIGNAL(moduleAdded(QString, QString , QString , QString , QString)));
+        QMetaObject::Connection connection2 = QObject::connect(this, SIGNAL(modulesFetched(std::vector<SyncModule*>)), this, SLOT(onModulesFetched(std::vector<SyncModule*>)));;
         if(result){
             qDebug() << " synctable Correct type passed";
         }
         else {
             qDebug() << "incorrect type passed";
+        }
+        for (int i = 0; i < 5; ++i) {
+            emit moduleAdded("Module" + QString::number(i + 1),
+                             "Source" + QString::number(i + 1),
+                             "Destination" + QString::number(i + 1),
+                             "Type" + QString::number(i + 1),
+                             "Direction" + QString::number(i + 1));
         }
     }
 signals:
