@@ -2,13 +2,13 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.qmlmodels
 import QtQuick.Layouts
-
+import '../'
 Rectangle {
     property string cell_main_color: "#F3F3F3"
     property string cell_secondary_color: "#EBEBEB"
     property string header_main_color: "#E1E1E1"
     property string header_secondary_color: "#CFCFCF"
-    property var headerLabels: ["Name", "Source", "Destination", "Type", "Direction", "Edit"]
+    property var headerLabels: ["Name", "Source", "Destination", "Type", "Direction", "Status"]
     property bool sortedAscending: true
     property int sortedColumnIndex: 0
     signal moduleAdded(string name, string source, string destination, string type, string direction)
@@ -122,17 +122,9 @@ Rectangle {
             TableModelColumn {display: "destination"}
             TableModelColumn {display: "type"}
             TableModelColumn {display: "direction"}
-            TableModelColumn {display : "edit"}
+            TableModelColumn {display : "name"}
 
             rows: [
-                { name: "Item 102918653901283691023690136827091237568", source: "HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLA", destination: "dest1", type: "type1", direction: "dir1", edit: "edit1" },
-                { name: "Item 2", source: "src2", destination: "dest2", type: "type2", direction: "dir2", edit: "edit2" },
-                { name: "Item 3", source: "src3", destination: "dest3", type: "type1", direction: "dir3", edit: "edit3" },
-                { name: "Item 4", source: "src4", destination: "dest1", type: "type2", direction: "dir1", edit: "edit4" },
-                { name: "Item 5", source: "src5", destination: "dest2", type: "type1", direction: "dir2", edit: "edit5" },
-                { name: "Item 6", source: "src6", destination: "dest3", type: "type3", direction: "dir1", edit: "edit6" },
-                { name: "Item 7", source: "src7", destination: "dest4", type: "type1", direction: "dir2", edit: "edit7" },
-                { name: "Item 8", source: "src8", destination: "dest5", type: "type2", direction: "dir3", edit: "edit8" }
             ]
 
         }
@@ -141,11 +133,13 @@ Rectangle {
             implicitWidth: main_table_rect.width * sizes[column]
             implicitHeight: 25
             MouseArea {
-                anchors.fill: parent
+                anchors.left: parent.left;
+                width: parent.width;
+                height: parent.height - 5;
                 hoverEnabled: true
                 onEntered: ()=>{tableView.selectedRow = row}
                 onExited: ()=>{
-                    tableView.selectedRow = -1
+                    tableView.selectedRow = -1;
                 }
 
                 id: mouseArea_header
@@ -170,7 +164,9 @@ Rectangle {
                 Item {
                     anchors.fill: parent
                     Loader {
-                        property string cellText: column === 5 ? "Edit" : display
+                        property string cellText: column === 5 ? display : display
+                        property int setHeight: parent.parent.height
+                        property int setWidth: parent.parent.width
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.leftMargin: 3
@@ -188,12 +184,29 @@ Rectangle {
     }
     Component{
         id: cell_actionsDelegate
-        Text{
-            anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            text: cellText
-            elide: Text.ElideRight
+        ProgressBar{
+            property string status: "active"
+            objectName: "progress_bar_"
+            width: setWidth - 6
+            height: setHeight - 6
+            inner_text: {
+                return status.charAt(0).toUpperCase() + status.slice(1) + ".";
+            }
+            progress_color: {
+            if (status === "active") {
+                return "#47fc7d";
+            } else if (status === "paused") {
+                return "#d3d3d3";
+            } else if (status === "done") {
+                return "#1E90FF";
+            } else {
+                return "#000000";
+            }
+            }
         }
+        // Label{
+        //     text: cellText
+        // }
     }
 
     function reverseSort(column) {
@@ -246,7 +259,7 @@ Rectangle {
             destination: destination,
             type: type,
             direction: direction,
-            edit: ""
+            Status: name
         }
         let col_name = tableView.model.columns[sortedColumnIndex];
         let indexAfter = -1;

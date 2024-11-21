@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 Rectangle{
     property double completion: 0
+    property string inner_text;
+    property string progress_color: "#47fc7d";
     border.color: "#d6d6d6"
     border.width:1
     color: "white"
@@ -9,22 +11,24 @@ Rectangle{
     height:15
     Layout.preferredWidth: width
     Layout.preferredHeight: height
-    GridLayout{
-        Rectangle{
-            Layout.topMargin: 1
-            Layout.leftMargin: 1
-            id: progress
-            width: 0
-            height: parent.parent.height - parent.parent.border.width * 2
-            color:"#47fc7d"
-        }
-        Layout.margins: 2
+    Rectangle{
+        anchors.left :parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        width: 50
+        id: progress
+        height: parent.height - parent.border.width * 2
+        color: parent.progress_color
     }
-
-
+    Text {
+        text: parent.inner_text
+        anchors.centerIn: parent
+        color: "black"
+        opacity: 0.4
+    }
 
     function modifyCompletion(value: double)
     {
         progress.width = value * progress.parent.parent.width - progress.parent.parent.border.width;
     }
+
 }

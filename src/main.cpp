@@ -26,6 +26,7 @@ int instantiateObjects(const QQmlApplicationEngine& engine){
     QObject* error_modal = root_obj->findChild<QObject *>("modal_error");
     ErrorModal* modal = new ErrorModal(error_modal);
     SyncTable* table = new SyncTable(syncTableQObj, modules);
+    QObject* ptr_prorgress_bar = root_obj->findChild<QObject*>("progress_bar_");
     mainWindow = new MainWindow(root_obj, addSyncModule, table, modal);
     return 1;
 }

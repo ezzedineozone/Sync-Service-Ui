@@ -39,7 +39,8 @@ Window
         width: errorLayout.implicitWidth + 20
         height: errorLayout.implicitHeight + 40
         modal: true
-        visible: true
+        visible: false
+        popupType: Popup.Window
         ColumnLayout{
             id: errorLayout
             anchors.centerIn: parent
@@ -47,6 +48,7 @@ Window
                 font.pixelSize: 13
                 text: "An error has occured"
                 id: generalErrorText
+                objectName: "generalErrorText"
             }
             RowLayout{
                 Button{
