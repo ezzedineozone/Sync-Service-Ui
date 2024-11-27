@@ -29,6 +29,7 @@ public:
         QMetaObject::Connection connection = QObject::connect(this, SIGNAL(serviceConnected()),this, SLOT(onServiceConnected()));
         QMetaObject::Connection connection3 = QObject::connect(this, SIGNAL(moduleAdded(QString, QString, QString, QString, QString)),qObj, SIGNAL(moduleAdded(QString, QString , QString , QString , QString)));
         QMetaObject::Connection connection2 = QObject::connect(this, SIGNAL(modulesFetched(std::vector<SyncModule*>)), this, SLOT(onModulesFetched(std::vector<SyncModule*>)));;
+        QMetaObject::Connection connection4 = QObject::connect(this, SIGNAL(modifyCompletion(QString, int)), qObj, SIGNAL(modifyCompletion(QString, float)));
         if(result){
             qDebug() << " synctable Correct type passed";
         }
@@ -42,11 +43,13 @@ public:
                              "Type" + QString::number(i + 1),
                              "Direction" + QString::number(i + 1));
         }
+        QObject* tableView = qObj->findChild<QObject*>("loader");
     }
 signals:
     void modulesFetched(std::vector<SyncModule*> init_modules);
     void serviceConnected();
     void moduleAdded(QString name, QString source, QString destination, QString type, QString direction);
+    void modifyCompletion(QString name, int value);
 
 public slots:
     void onServiceConnected(){
@@ -63,10 +66,12 @@ public slots:
                 QString::fromStdString(module->direction)
             );
         }
+        emit modifyCompletion(QString::fromStdString(std::string("Module8")),0.8);
     };
     void onModuleAdded(QString name, QString source, QString destination, QString type, QString direction){
         qDebug() << "Module added from QML";
     }
+
 
 };
 

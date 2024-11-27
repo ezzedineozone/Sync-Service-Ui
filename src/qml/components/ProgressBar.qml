@@ -14,7 +14,7 @@ Rectangle{
     Rectangle{
         anchors.left :parent.left
         anchors.verticalCenter: parent.verticalCenter
-        width: 50
+        width: parent.completion * progress.parent.parent.width - progress.border.width
         id: progress
         height: parent.height - parent.border.width * 2
         color: parent.progress_color
@@ -24,11 +24,6 @@ Rectangle{
         anchors.centerIn: parent
         color: "black"
         opacity: 0.4
-    }
-
-    function modifyCompletion(value: double)
-    {
-        progress.width = value * progress.parent.parent.width - progress.parent.parent.border.width;
     }
 
 }

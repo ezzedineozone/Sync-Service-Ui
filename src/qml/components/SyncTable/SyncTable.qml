@@ -12,9 +12,14 @@ Rectangle {
     property bool sortedAscending: true
     property int sortedColumnIndex: 0
     signal moduleAdded(string name, string source, string destination, string type, string direction)
+    signal modifyCompletion(string name, real val)
     onModuleAdded : function(name, source, destination, type, direction){
         addModule(name, source, destination, type, direction);
     }
+    onModifyCompletion:function (name, val) {
+        modify_progress(name, val);
+    }
+
     //below here each will corespond to its respective index in headerLabels, that means 0 corresponds to name, 1 to source etc...
     property var sizes : [0.1,0.25,0.25,0.1,0.1,0.2]
     id: main_table_rect
@@ -101,6 +106,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         property int selectedRow: -1
         property bool selectedRowMutex: false
+        objectName: "tableView"
         clip: true
         interactive: false
 
@@ -122,11 +128,16 @@ Rectangle {
             TableModelColumn {display: "destination"}
             TableModelColumn {display: "type"}
             TableModelColumn {display: "direction"}
-            TableModelColumn {display : "name"}
+            TableModelColumn {display : "progress"}
 
             rows: [
+                { name: "Module7", source: "Source7", destination: "Dest7", type: "TypeA", direction: "In", progress: 0.0},
+                { name: "Module8", source: "Source8", destination: "Dest8", type: "TypeB", direction: "Out", progress: 0.0 },
+                { name: "Module9", source: "Source9", destination: "Dest9", type: "TypeC", direction: "In", progress: 0.0 },
+                { name: "Module10", source: "Source10", destination: "Dest10", type: "TypeA", direction: "Out", progress: 0.0 },
+                { name: "Module11", source: "Source11", destination: "Dest11", type: "TypeB", direction: "In", progress:0.0},
+                { name: "Module12", source: "Source12", destination: "Dest12", type: "TypeC", direction: "Out", progress: 0.0 }
             ]
-
         }
 
         delegate: Item {
@@ -167,10 +178,13 @@ Rectangle {
                         property string cellText: column === 5 ? display : display
                         property int setHeight: parent.parent.height
                         property int setWidth: parent.parent.width
+                        property int rowVal: row
+                        property int colVal: column
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.leftMargin: 3
                         sourceComponent: column === 5 ? cell_actionsDelegate : cell_textDelegate
+                        objectName: "loader"
                     }
                 }
             }
@@ -186,12 +200,13 @@ Rectangle {
         id: cell_actionsDelegate
         ProgressBar{
             property string status: "active"
-            objectName: "progress_bar_"
             width: setWidth - 6
             height: setHeight - 6
             inner_text: {
                 return status.charAt(0).toUpperCase() + status.slice(1) + ".";
             }
+            completion: cellText
+
             progress_color: {
             if (status === "active") {
                 return "#47fc7d";
@@ -223,6 +238,21 @@ Rectangle {
                 sortDesc(column);
         }
     }
+    function getRowIndexByName(name) {
+        let rows = tableView.model.rows;
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i]["name"] === name) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    function modify_progress(name, val)
+    {
+        var ix = tableView.model.index(getRowIndexByName(name), 5);
+        tableView.model.setData(ix, "display", val);
+    }
+
     function sortAsc(column)
     {
         sortedAscending = true;
@@ -259,7 +289,7 @@ Rectangle {
             destination: destination,
             type: type,
             direction: direction,
-            Status: name
+            progress: 0
         }
         let col_name = tableView.model.columns[sortedColumnIndex];
         let indexAfter = -1;
