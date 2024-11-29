@@ -8,20 +8,32 @@ Rectangle {
     property string cell_secondary_color: "#EBEBEB"
     property string header_main_color: "#E1E1E1"
     property string header_secondary_color: "#CFCFCF"
-    property var headerLabels: ["Name", "Source", "Destination", "Type", "Direction", "Status"]
+    property var headerLabels: ["Name", "Source", "Destination", "Type", "Direction", "Progress", "Status"]
     property bool sortedAscending: true
     property int sortedColumnIndex: 0
     signal moduleAdded(string name, string source, string destination, string type, string direction)
     signal modifyCompletion(string name, real val)
+    signal modifyStatus(string name, string Status)
+    signal modulePause(string name)
+    signal moduleResume(string name)
+    signal moduleEdit(string name)
+    signal moduleDelete(string name)
+    signal modulePaused(string name);
+    signal moduleDeleted(string name);
+    signal moduleResumed(string name);
     onModuleAdded : function(name, source, destination, type, direction){
         addModule(name, source, destination, type, direction);
     }
     onModifyCompletion:function (name, val) {
         modify_progress(name, val);
     }
+    onModifyStatus: function(name, status)
+    {
+        modify_status(name, status);
+    }
 
     //below here each will corespond to its respective index in headerLabels, that means 0 corresponds to name, 1 to source etc...
-    property var sizes : [0.1,0.25,0.25,0.1,0.1,0.2]
+    property var sizes : [0.1,0.2,0.2,0.1,0.1,0.2, 0.1]
     id: main_table_rect
     HorizontalHeaderView {
         id: horizontalHeader
@@ -129,15 +141,16 @@ Rectangle {
             TableModelColumn {display: "type"}
             TableModelColumn {display: "direction"}
             TableModelColumn {display : "progress"}
+            TableModelColumn {display: "status"}
 
             rows: [
-                { name: "Module7", source: "Source7", destination: "Dest7", type: "TypeA", direction: "In", progress: 0.0},
-                { name: "Module8", source: "Source8", destination: "Dest8", type: "TypeB", direction: "Out", progress: 0.0 },
-                { name: "Module9", source: "Source9", destination: "Dest9", type: "TypeC", direction: "In", progress: 0.0 },
-                { name: "Module10", source: "Source10", destination: "Dest10", type: "TypeA", direction: "Out", progress: 0.0 },
-                { name: "Module11", source: "Source11", destination: "Dest11", type: "TypeB", direction: "In", progress:0.0},
-                { name: "Module12", source: "Source12", destination: "Dest12", type: "TypeC", direction: "Out", progress: 0.0 }
-            ]
+               { name: "Module7", source: "Source7", destination: "Dest7", type: "TypeA", direction: "In", status: "active", progress: 0.0 },
+               { name: "Module8", source: "Source8", destination: "Dest8", type: "TypeB", direction: "Out", status: "active", progress: 0.0 },
+               { name: "Module9", source: "Source9", destination: "Dest9", type: "TypeC", direction: "In", status: "active", progress: 0.0 },
+               { name: "Module10", source: "Source10", destination: "Dest10", type: "TypeA", direction: "Out", status: "active", progress: 0.0 },
+               { name: "Module11", source: "Source11", destination: "Dest11", type: "TypeB", direction: "In", status: "active", progress: 0.0 },
+               { name: "Module12", source: "Source12", destination: "Dest12", type: "TypeC", direction: "Out", status: "active", progress: 0.0 }
+           ]
         }
 
         delegate: Item {
@@ -154,6 +167,38 @@ Rectangle {
                 }
 
                 id: mouseArea_header
+            }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onClicked: {
+                    if (mouse.button === Qt.RightButton)
+                        contextMenu.popup()
+                }
+                onPressAndHold: {
+                    if (mouse.source === Qt.MouseEventNotSynthesized)
+                        contextMenu.popup()
+                }
+
+                Menu {
+                    id: contextMenu
+                    MenuItem {
+                        text: "Pause"
+                        onTriggered: { handlePause(row) }
+                    }
+                    MenuItem {
+                        text: "Resume"
+                        onTriggered: { handleResume(row) }
+                    }
+                    MenuItem {
+                        text: "Edit"
+                        onTriggered: { handleEdit(row) }
+                    }
+                    MenuItem {
+                        text: "Delete"
+                        onTriggered: { handleDelete(row) }
+                    }
+                }
             }
             Rectangle {
                 anchors.fill: parent
@@ -175,7 +220,7 @@ Rectangle {
                 Item {
                     anchors.fill: parent
                     Loader {
-                        property string cellText: column === 5 ? display : display
+                        property string cellText: display
                         property int setHeight: parent.parent.height
                         property int setWidth: parent.parent.width
                         property int rowVal: row
@@ -183,7 +228,8 @@ Rectangle {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.leftMargin: 3
-                        sourceComponent: column === 5 ? cell_actionsDelegate : cell_textDelegate
+                        sourceComponent: column === 5 ? cell_actionsDelegate :
+                                        (column === 6 ? cell_statusDelegate : cell_textDelegate)
                         objectName: "loader"
                     }
                 }
@@ -199,32 +245,25 @@ Rectangle {
     Component{
         id: cell_actionsDelegate
         ProgressBar{
-            property string status: "active"
             width: setWidth - 6
             height: setHeight - 6
-            inner_text: {
-                return status.charAt(0).toUpperCase() + status.slice(1) + ".";
-            }
             completion: cellText
-
-            progress_color: {
-            if (status === "active") {
-                return "#47fc7d";
-            } else if (status === "paused") {
-                return "#d3d3d3";
-            } else if (status === "done") {
-                return "#1E90FF";
-            } else {
-                return "#000000";
-            }
-            }
         }
-        // Label{
-        //     text: cellText
-        // }
+    }
+    Component{
+        id: cell_statusDelegate
+        Text{
+            text: cellText === "active" ? "Active..." : cellText.charAt(0).toUpperCase() + cellText.slice(1)
+            color: cellText === "paused" ? "#808080" :  // gray for paused
+                   cellText === "active" ? "#4CAF50" :  // green for active
+                   cellText === "done" ? "#2196F3" :    // blue for done
+                   cellText === "error" ? "#F44336" :   // red for error
+                   "#000000" // Default black color
+        }
     }
 
     function reverseSort(column) {
+        console.log("Type of column:", typeof column);
         debugger;
         if (sortedColumnIndex !== column) {
             sortedColumnIndex = column;
@@ -241,7 +280,7 @@ Rectangle {
     function getRowIndexByName(name) {
         let rows = tableView.model.rows;
         for (let i = 0; i < rows.length; i++) {
-            if (rows[i]["name"] === name) {
+            if (rows[i]["name"].toLowerCase() === name.toLowerCase()) {
                 return i;
             }
         }
@@ -251,6 +290,11 @@ Rectangle {
     {
         var ix = tableView.model.index(getRowIndexByName(name), 5);
         tableView.model.setData(ix, "display", val);
+    }
+    function modify_status(name, status)
+    {
+        var ix = tableView.model.index(getRowIndexByName(name),6);
+        tableView.model.setData(ix, "display", status);
     }
 
     function sortAsc(column)
@@ -289,7 +333,8 @@ Rectangle {
             destination: destination,
             type: type,
             direction: direction,
-            progress: 0
+            status: "active",
+            progress: 0.0
         }
         let col_name = tableView.model.columns[sortedColumnIndex];
         let indexAfter = -1;
