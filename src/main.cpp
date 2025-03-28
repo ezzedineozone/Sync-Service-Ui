@@ -36,6 +36,9 @@ int startup_routine(const QQmlApplicationEngine& engine)
     int service_connected_started = mainWindow->onConnectToService();
     return objects_instantiated & service_connected_started;
 }
+int check_boolean(bool bl){
+
+}
 int main(int argc, char* argv[]){
     QGuiApplication app(argc, argv);
     qmlRegisterType<AddSyncModule>("user.QObjects",1,0,"AddSyncModule");
@@ -43,6 +46,7 @@ int main(int argc, char* argv[]){
     int startup_routine_success = startup_routine(engine);
     if(!startup_routine_success)
     {
+        
     }
     return app.exec();
 }

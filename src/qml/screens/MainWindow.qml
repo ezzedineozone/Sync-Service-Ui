@@ -139,11 +139,11 @@ Window
            Layout.fillWidth: true
            Layout.column: 0
            Layout.columnSpan: mainGridColumns
-           visible: true
+           visible: false
        }
         Rectangle{
             id: serviceStatus
-            visible: false
+            visible: true
             Layout.row:2
             Layout.column:0
             Layout.topMargin:10

@@ -96,6 +96,12 @@ int TcpClient::command_handler(nlohmann::json j){
             QString::fromStdString(module["direction"])
         );
     }
+    else if(command == "remove"){
+        //"{\"command\":\"remove\",\"data\":\"test\"}"
+        std::string name = j["data"];
+        qDebug() << "removing module" + QString::fromStdString(name);
+        emit sync_table->moduleDeleted(QString::fromStdString(name));
+    }
     else if (command == "-1")
     {
         QString errorMsg = QString("Command: \"%1\"\nError Message: %2").arg(QString::fromStdString(command)).arg(QString::fromStdString(j["data"]));
@@ -140,4 +146,5 @@ void TcpClient::notify_success(std::string type, const std::error_code& ec, std:
         qDebug() << "Error sending command '" + QString::fromStdString(type) + "':" << QString::fromStdString(ec.message());
     }
 }
+
 

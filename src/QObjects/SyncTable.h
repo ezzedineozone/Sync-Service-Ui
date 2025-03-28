@@ -1,7 +1,7 @@
 #ifndef SYNCTABLE_H
 
 #define SYNCTABLE_H
-
+#include "../tcp_client.h"
 #include <QObject>
 #include <cstring>
 #include <QtDebug>
@@ -31,28 +31,26 @@ public:
         QMetaObject::Connection connection2 = QObject::connect(this, SIGNAL(modulesFetched(std::vector<SyncModule*>)), this, SLOT(onModulesFetched(std::vector<SyncModule*>)));;
         QMetaObject::Connection connection4 = QObject::connect(this, SIGNAL(modifyCompletion(QString, double)), qObj, SIGNAL(modifyCompletion(QString, double)));
         QMetaObject::Connection connection5 = QObject::connect(this, SIGNAL(modifyStatus(QString, QString)), qObj, SIGNAL(modifyStatus(QString, QString)));
+        QMetaObject::Connection connection6 = QObject::connect(qObj, SIGNAL(moduleDelete(QString)), this, SLOT(onModuleDelete(QString)));
+        QMetaObject::Connection connection7 = QObject::connect(this, SIGNAL(moduleDeleted(QString)), this, SLOT(onModuleDeleted(QString)));
+        QMetaObject::Connection connection8 = QObject::connect(this, SIGNAL(moduleDeleted(QString)), qObj, SIGNAL(moduleDeleted(QString)));
         if(result){
             qDebug() << " synctable Correct type passed";
         }
         else {
             qDebug() << "incorrect type passed";
         }
-        for (int i = 0; i < 5; ++i) {
-            emit moduleAdded("Module" + QString::number(i + 1),
-                             "Source" + QString::number(i + 1),
-                             "Destination" + QString::number(i + 1),
-                             "Type" + QString::number(i + 1),
-                             "Direction" + QString::number(i + 1));
-        }
-        QObject* tableView = qObj->findChild<QObject*>("loader");
         emit modifyCompletion("module10", 0.7);
         emit modifyStatus("module10", "paused");
-        emit modifyStatus("module7", "error");
+        emit modifyStatus("module7", "active");
+        emit modifyCompletion("module11", 0.3);
     }
 signals:
     void modulesFetched(std::vector<SyncModule*> init_modules);
     void serviceConnected();
     void moduleAdded(QString name, QString source, QString destination, QString type, QString direction);
+    void moduleDelete(QString name);
+    void moduleDeleted(QString name);
     void modifyCompletion(QString name, double value);
     void modifyStatus(QString name, QString status);
 
@@ -75,6 +73,22 @@ public slots:
     };
     void onModuleAdded(QString name, QString source, QString destination, QString type, QString direction){
         qDebug() << "Module added from QML";
+    }
+    void onModuleDeleted(QString name){
+        qDebug() << "Module deleted from QML";
+        for(auto it = modules.begin(); it != modules.end(); ++it) {
+            if((*it)->name == name.toStdString()) {
+                delete *it;
+                modules.erase(it);
+                break;
+            }
+        }
+        qDebug() << "Module deleted from SyncTable";
+    }
+    void onModuleDelete(QString name){
+        TcpClient& client = TcpClient::get_instance("127.0.0.1","13");
+        client.notify_removal(name.toStdString());
+        qDebug() << "Module deleted from QML";
     }
 
 

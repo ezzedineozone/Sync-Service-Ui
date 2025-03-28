@@ -9,10 +9,10 @@
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
 #include "dependencies/json/json.hpp"
-#include "QObjects/SyncTable.h"
 #include "QObjects/ErrorModal.h"
 class AddSyncModule;
 class SyncTable;
+
 class TcpClient : public QObject, public std::enable_shared_from_this<TcpClient> {
     Q_OBJECT
 public:

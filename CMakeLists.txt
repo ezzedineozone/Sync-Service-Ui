@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 project(ProjectSync VERSION 1.0)
 set(QT_QML_IMPORT_PATH "${CMAKE_PREFIX_PATH}/qml")
+set(CMAKE_PREFIX_PATH "C:/Qt/6.8.0/mingw_64/lib/cmake/Qt6")
+set(Qt6Quick_DIR "C:/Qt/6.8.0/mingw_64/lib/cmake/Qt6Quick")
+set(Qt6QmlTools_DIR "C:/Qt/6.8.0/mingw_64/lib/cmake/Qt6QmlTools")
+set(Qt6QuickTools_DIR "C:/Qt/6.8.0/mingw_64/lib/cmake/Qt6QuickTools")
+
 find_package(Qt6 6.8 COMPONENTS Core Quick Gui REQUIRED)
 qt_standard_project_setup(REQUIRES 6.8)
 set(CMAKE_CXX_STANDARD 17)

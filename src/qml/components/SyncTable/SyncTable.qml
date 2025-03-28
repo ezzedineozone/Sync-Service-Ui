@@ -31,7 +31,10 @@ Rectangle {
     {
         modify_status(name, status);
     }
-
+    onModuleDeleted: function(name) {
+        console.log("Module deleted:", name);
+        deleteModule(name);
+    }
     //below here each will corespond to its respective index in headerLabels, that means 0 corresponds to name, 1 to source etc...
     property var sizes : [0.1,0.2,0.2,0.1,0.1,0.2, 0.1]
     id: main_table_rect
@@ -142,15 +145,15 @@ Rectangle {
             TableModelColumn {display: "direction"}
             TableModelColumn {display : "progress"}
             TableModelColumn {display: "status"}
-
             rows: [
-               { name: "Module7", source: "Source7", destination: "Dest7", type: "TypeA", direction: "In", status: "active", progress: 0.0 },
-               { name: "Module8", source: "Source8", destination: "Dest8", type: "TypeB", direction: "Out", status: "active", progress: 0.0 },
-               { name: "Module9", source: "Source9", destination: "Dest9", type: "TypeC", direction: "In", status: "active", progress: 0.0 },
-               { name: "Module10", source: "Source10", destination: "Dest10", type: "TypeA", direction: "Out", status: "active", progress: 0.0 },
-               { name: "Module11", source: "Source11", destination: "Dest11", type: "TypeB", direction: "In", status: "active", progress: 0.0 },
-               { name: "Module12", source: "Source12", destination: "Dest12", type: "TypeC", direction: "Out", status: "active", progress: 0.0 }
-           ]
+               { name: "Module7", source: "/local/path/source7", destination: "/local/path/dest7", type: "local", direction: "one-way", status: "active", progress: 0.0 },
+               { name: "Module8", source: "/cloud/storage/source8", destination: "/cloud/storage/dest8", type: "cloud", direction: "two-way", status: "active", progress: 0.0 },
+               { name: "Module9", source: "/local/path/source9", destination: "/local/path/dest9", type: "local", direction: "one-way", status: "active", progress: 0.0 },
+               { name: "Module10", source: "/cloud/storage/source10", destination: "/cloud/storage/dest10", type: "cloud", direction: "two-way", status: "active", progress: 0.0 },
+               { name: "Module11", source: "/local/path/source11", destination: "/local/path/dest11", type: "local", direction: "one-way", status: "active", progress: 0.0 },
+               { name: "Module12", source: "/cloud/storage/source12", destination: "/cloud/storage/dest12", type: "cloud", direction: "two-way", status: "active", progress: 0.0 }
+            ]
+
         }
 
         delegate: Item {
@@ -324,6 +327,29 @@ Rectangle {
             }
             return valueA < valueB ? 1 : (valueA > valueB ? -1 : 0);
         });
+    }
+    function handleDelete(row){
+        console.log(row);
+        let module = getModuleByRowIndex(row);
+        console.log(module.name);
+        //print all modules
+        for(let i = 0; i < tableView.model.rows.length; i++)
+        {
+            console.log(tableView.model.rows[i].name);
+        }
+        moduleDelete(module.name);
+    }
+    function getModuleByRowIndex(row){
+        let module = tableView.model.rows[row];
+        return module;
+    }
+    function deleteModule(name){
+        let index = getRowIndexByName(name);
+        if(index !== -1)
+        {
+            tableView.model.removeRow(index);
+            moduleDeleted(name);
+        }
     }
     function addModule(name, source, destination, type, direction)
     {
