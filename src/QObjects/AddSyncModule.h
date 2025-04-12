@@ -45,6 +45,7 @@ public:
             meta_obj = metaObj;
             qDebug() << " addsyncmodule Correct type passed";
             QObject::connect(this, SIGNAL(openSignal()),this, SLOT(onOpenSignal()));
+            QObject::connect(this, SIGNAL(openSignal()), obj, SIGNAL(openSignal()));
             QObject::connect(obj, SIGNAL(cancel()), this, SLOT(onCancel()));
             QObject::connect(obj, SIGNAL(sourceFolderAccepted()), this, SLOT(onSourceFolderAccepted()));
             QObject::connect(obj, SIGNAL(destinationFolderAccepted()), this, SLOT(onDestinationFolderAccepted()));
@@ -52,6 +53,7 @@ public:
             QObject::connect(obj, SIGNAL(directionSelected()), this, SLOT(onDirectionSelected()));
             QObject::connect(obj, SIGNAL(done()), this, SLOT(onDone()));
             QObject::connect(obj, SIGNAL(nameModified()), this, SLOT(onNameModified()));
+            QObject::connect(obj, SIGNAL(editModule(QString, QString, QString, QString, QString, QString)), this, SLOT(onEditModule(QString, QString, QString, QString, QString, QString)));
         }
         else
             qDebug() << "wrong type passed";
@@ -155,7 +157,12 @@ public slots:
         qDebug() << selectedDirection;
         this->direction = selectedDirection;
     };
+    void onEditModule(QString old_name, QString new_name, QString type, QString direction, QString source, QString destination){
+        TcpClient& client = TcpClient::get_instance("127.0.0.1","13");
+        std::unique_ptr<SyncModule> module = std::make_unique<SyncModule>(new_name.toStdString(), source.toStdString(), destination.toStdString(), type.toStdString(), direction.toStdString());
+        client.notify_edit(old_name.toStdString(), std::move(module));
+        qDebug() << "Module edit request sent from QML";
+    };
 };
-
 #endif
 

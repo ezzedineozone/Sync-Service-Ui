@@ -16,11 +16,11 @@ Rectangle {
     signal modifyStatus(string name, string Status)
     signal modulePause(string name)
     signal moduleResume(string name)
-    signal moduleEdit(string name)
     signal moduleDelete(string name)
     signal modulePaused(string name);
     signal moduleDeleted(string name);
     signal moduleResumed(string name);
+    signal openEditWindow(string name, string source, string destination, string type, string direction);
     onModuleAdded : function(name, source, destination, type, direction){
         addModule(name, source, destination, type, direction);
     }
@@ -338,6 +338,10 @@ Rectangle {
             console.log(tableView.model.rows[i].name);
         }
         moduleDelete(module.name);
+    }
+    function handleEdit(row){
+        let module = getModuleByRowIndex(row);
+        openEditWindow(module.name, module.source, module.destination, module.type, module.direction);
     }
     function getModuleByRowIndex(row){
         let module = tableView.model.rows[row];

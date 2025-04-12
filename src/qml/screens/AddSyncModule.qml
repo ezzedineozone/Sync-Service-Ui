@@ -7,6 +7,8 @@ import user.QObjects 1.0;
 
 ApplicationWindow {
     property string selectedDialog: ""
+    property int isEditMode: 0
+    property string oldModuleName: ""
 
     signal done();
     signal cancel;
@@ -16,8 +18,48 @@ ApplicationWindow {
     signal typeSelected;
     signal directionSelected;
     signal nameModified;
+    signal openEditWindow(string moduleName, string moduleType, string moduleDirection, string sourcePath, string destinationPath);
+    signal editModule(string moduleName, string new_name, string moduleType, string moduleDirection, string sourcePath, string destinationPath);
 
-
+    //onOpenEditWindow
+    onOpenEditWindow: (moduleName, sourcePath, destinationPath, moduleType, moduleDirection)=>{
+        console.log("openEditWindow signal received");
+        module_name.text = moduleName;
+        source_input.text = sourcePath;
+        destination_input.text = destinationPath;
+        let direction_index = -1;
+        window.isEditMode = 1;
+        for(let i = 0; i < sync_directions.count; i++)
+        {
+            if(sync_directions.get(i).name === moduleDirection)
+            {
+                direction_index = i;
+                break;
+            }
+        }
+        if(direction_index !== -1)
+        {
+            selected_direction.currentIndex = direction_index;
+        }
+        let type_index = -1;
+        for(let i = 0; i < sync_types.count; i++)
+        {
+            if(sync_types.get(i).name === moduleType)
+            {
+                type_index = i;
+                break;
+            }
+        }
+        if(type_index !== -1)
+        {
+            selected_type.currentIndex = type_index;
+        }
+        window.visible = true;
+        window.oldModuleName = moduleName;
+    }
+    onOpenSignal : ()=>{
+        window.isEditMode = 0;
+    }
     id: window
     width: 365
     height: 270
@@ -48,8 +90,28 @@ ApplicationWindow {
             console.log("invalid combo box signal");
     }
     function onAddButtonClick(){
-        console.log("calling done signal");
         done();
+    }
+    function onEditButtonClick(){
+        console.log("edit button clicked"); 
+        let new_name = module_name.text;
+        let moduleType = selected_type.currentText;
+        let moduleDirection = selected_direction.currentText;
+        let sourcePath = source_input.text;
+        let destinationPath = destination_input.text;
+        editModule(oldModuleName, new_name, moduleType, moduleDirection, sourcePath, destinationPath);
+        window.oldModuleName = "";
+        window.visible = false;
+    }
+    function onMainButtonClick(){
+        if(window.isEditMode == 1)
+        {
+            onEditButtonClick();
+        }
+        else
+        {
+            onAddButtonClick();
+        }
     }
     function onCancelButtonClick(){
         cancel();
@@ -80,7 +142,6 @@ ApplicationWindow {
             name: "Backup"
         }
     }
-
     FolderDialog{
         id: source_folder_dialog
         objectName: "source_folder_dialog"
@@ -240,10 +301,17 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignCenter
                 Layout.topMargin: 20
                 CustomButton{
-                    innerText: "Add"
-                    buttonSize: "medium"
+                    Text{
+                        text: (window.isEditMode === 1) ? "Save" : "Add"
+                        font.pixelSize: 14
+                        anchors.centerIn: parent
+                        id: main_btn_text
+                    } 
+                    innerText: ""
+                    width: main_btn_text.width + 20
                     border_width: 1
-                    behavior: onAddButtonClick
+                    behavior: onMainButtonClick
+                    id: main_btn
                 }
                 CustomButton{
                     innerText: "Cancel"

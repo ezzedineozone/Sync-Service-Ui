@@ -138,6 +138,15 @@ void TcpClient::notify_add(const SyncModule& module)
     message_ = j.dump() + "\r\n";
     asio::async_write(socket_, asio::buffer(message_), std::bind(&TcpClient::notify_success, shared_from_this(), "add", std::placeholders::_1, std::placeholders::_2));
 }
+void TcpClient::notify_edit(std::string name, std::unique_ptr<SyncModule> module){
+    nlohmann::json j;
+    j["command"] = "edit";
+    j["data"]["name"] = name;
+    j["data"]["module"] = module->to_json();
+    message_ = j.dump() + "\r\n";
+    asio::async_write(socket_, asio::buffer(message_), std::bind(&TcpClient::notify_success, shared_from_this(), "edit", std::placeholders::_1, std::placeholders::_2));
+    qDebug() << "edit command sent";
+}
 void TcpClient::notify_success(std::string type, const std::error_code& ec, std::size_t bytes_transferred) {
     if (!ec) {
         qDebug() << "Command '" + QString::fromStdString(type) + "' successfully sent. Bytes transferred:" << bytes_transferred;

@@ -12,6 +12,7 @@
 #include "../helper.h"
 #include "../sync_module.h"
 #include <filesystem>
+
 namespace  fs = std::filesystem;
 class SyncTable : public QObject
 {
@@ -20,6 +21,7 @@ private:
 
 public:
     QObject* qObj;
+    
     std::vector<SyncModule*>& modules;
     SyncTable(QObject* obj, std::vector<SyncModule*>& modules): qObj(obj), modules(modules){
         const QMetaObject* metaObj = qObj->metaObject();
@@ -34,6 +36,7 @@ public:
         QMetaObject::Connection connection6 = QObject::connect(qObj, SIGNAL(moduleDelete(QString)), this, SLOT(onModuleDelete(QString)));
         QMetaObject::Connection connection7 = QObject::connect(this, SIGNAL(moduleDeleted(QString)), this, SLOT(onModuleDeleted(QString)));
         QMetaObject::Connection connection8 = QObject::connect(this, SIGNAL(moduleDeleted(QString)), qObj, SIGNAL(moduleDeleted(QString)));
+        QMetaObject::Connection connection9 = QObject::connect(qObj, SIGNAL(moduleEdit(QString, QString, QString, QString, QString)), this, SLOT(onModuleEdit(QString, QString, QString, QString, QString)));
         if(result){
             qDebug() << " synctable Correct type passed";
         }
@@ -90,7 +93,13 @@ public slots:
         client.notify_removal(name.toStdString());
         qDebug() << "Module deleted from QML";
     }
-
+    void onModuleEdit(QString name, QString source, QString destination, QString type, QString direction){
+        TcpClient& client = TcpClient::get_instance("127.0.0.1","13");
+        // SyncModule module(name.toStdString(), source.toStdString(), destination.toStdString(), type.toStdString(), direction.toStdString());
+        std::unique_ptr<SyncModule> module = std::make_unique<SyncModule>(name.toStdString(), source.toStdString(), destination.toStdString(), type.toStdString(), direction.toStdString());
+        client.notify_edit(name.toStdString(), std::move(module));
+        qDebug() << "Module edit request sent from QML";
+    }
 
 };
 

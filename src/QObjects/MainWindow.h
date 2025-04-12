@@ -40,6 +40,10 @@ public:
             QMetaObject::Connection connection4 = QObject::connect(this, SIGNAL(serviceConnected()), obj, SIGNAL(serviceConnected()));
             QMetaObject::Connection connection5 = QObject::connect(this, SIGNAL(serviceConnected()),table, SIGNAL(serviceConnected()));
             QMetaObject::Connection connection6 = QObject::connect(this, SIGNAL(serviceConnected()),this, SLOT(onServiceConnected()));
+            QMetaObject::Connection connection7 = QObject::connect(syncTable->qObj, SIGNAL(openEditWindow(QString, QString, QString, QString, QString)), addSyncModule->qObj, SIGNAL(openEditWindow(QString, QString, QString, QString, QString)));
+            if(!connection7){
+                qDebug() << "failed to connect edit window signal";
+            }
             if(!connection2)
                 qDebug() << "failed to connect signals";
         }

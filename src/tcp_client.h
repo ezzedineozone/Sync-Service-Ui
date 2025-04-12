@@ -23,6 +23,7 @@ public:
     int start_reading();
     void notify_add(const SyncModule& module);
     void notify_removal(std::string name);
+    void notify_edit(std::string name, std::unique_ptr<SyncModule> module);
     int command_handler(nlohmann::json j);
 
 private:
