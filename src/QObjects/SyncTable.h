@@ -37,6 +37,8 @@ public:
         QMetaObject::Connection connection7 = QObject::connect(this, SIGNAL(moduleDeleted(QString)), this, SLOT(onModuleDeleted(QString)));
         QMetaObject::Connection connection8 = QObject::connect(this, SIGNAL(moduleDeleted(QString)), qObj, SIGNAL(moduleDeleted(QString)));
         QMetaObject::Connection connection9 = QObject::connect(qObj, SIGNAL(moduleEdit(QString, QString, QString, QString, QString)), this, SLOT(onModuleEdit(QString, QString, QString, QString, QString)));
+        QMetaObject::Connection connection10 = QObject::connect(qObj, SIGNAL(moduleSync(QString)), this, SIGNAL(moduleSync(QString)));
+        QMetaObject::Connection connection11 = QObject::connect(this, SIGNAL(moduleSync(QString)), this, SLOT(onModuleSync(QString)));
         if(result){
             qDebug() << " synctable Correct type passed";
         }
@@ -56,6 +58,7 @@ signals:
     void moduleDeleted(QString name);
     void modifyCompletion(QString name, double value);
     void modifyStatus(QString name, QString status);
+    void moduleSync(QString name);
 
 public slots:
     void onServiceConnected(){
@@ -100,7 +103,11 @@ public slots:
         client.notify_edit(name.toStdString(), std::move(module));
         qDebug() << "Module edit request sent from QML";
     }
-
+    void onModuleSync(QString name){
+        TcpClient& client = TcpClient::get_instance("127.0.0.1","13");
+        client.request_sync(name.toStdString());
+        qDebug() << "Module sync request sent from QML";
+    }
 };
 
 

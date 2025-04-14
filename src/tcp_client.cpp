@@ -101,6 +101,18 @@ int TcpClient::command_handler(nlohmann::json j){
         std::string name = j["data"];
         qDebug() << "removing module" + QString::fromStdString(name);
         emit sync_table->moduleDeleted(QString::fromStdString(name));
+    } else if (command == "progress"){
+        std::string module_name = j["data"]["name"].dump();
+        std::string new_progress_value = j["data"]["progress"].dump();
+        double val = 0;
+        try{
+            val = std::stod(new_progress_value);
+        }catch (const std::invalid_argument& e) {
+            std::cerr << "Invalid argument: " << e.what() << std::endl;
+        } catch (const std::out_of_range& e) {
+            std::cerr << "Out of range: " << e.what() << std::endl;
+        }
+        emit sync_table->modifyCompletion(QString::fromStdString(module_name), val);
     }
     else if (command == "-1")
     {
@@ -154,6 +166,14 @@ void TcpClient::notify_success(std::string type, const std::error_code& ec, std:
     else {
         qDebug() << "Error sending command '" + QString::fromStdString(type) + "':" << QString::fromStdString(ec.message());
     }
+}
+void TcpClient::request_sync(std::string name){
+    nlohmann::json j;
+    j["command"] = "sync";
+    j["data"] = name;
+    message_ = j.dump() + "\r\n";
+    asio::async_write(socket_, asio::buffer(message_), std::bind(&TcpClient::notify_success, shared_from_this(), "sync", std::placeholders::_1, std::placeholders::_2));
+    qDebug() << "sync command sent";
 }
 
 

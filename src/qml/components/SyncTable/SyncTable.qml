@@ -21,6 +21,7 @@ Rectangle {
     signal moduleDeleted(string name);
     signal moduleResumed(string name);
     signal openEditWindow(string name, string source, string destination, string type, string direction);
+    signal moduleSync(string name);
     onModuleAdded : function(name, source, destination, type, direction){
         addModule(name, source, destination, type, direction);
     }
@@ -201,6 +202,10 @@ Rectangle {
                         text: "Delete"
                         onTriggered: { handleDelete(row) }
                     }
+                    MenuItem {
+                        text: "Sync now"
+                        onTriggered: {handleSync(row)}
+                    }
                 }
             }
             Rectangle {
@@ -342,6 +347,10 @@ Rectangle {
     function handleEdit(row){
         let module = getModuleByRowIndex(row);
         openEditWindow(module.name, module.source, module.destination, module.type, module.direction);
+    }
+    function handleSync(row){
+        let module = getModuleByRowIndex(row);
+        moduleSync(module.name);
     }
     function getModuleByRowIndex(row){
         let module = tableView.model.rows[row];

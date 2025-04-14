@@ -24,6 +24,7 @@ public:
     void notify_add(const SyncModule& module);
     void notify_removal(std::string name);
     void notify_edit(std::string name, std::unique_ptr<SyncModule> module);
+    void request_sync(std::string name);
     int command_handler(nlohmann::json j);
 
 private:
